@@ -824,31 +824,15 @@ class Affiliates_MailChimp {
 	 * @return boolean|string
 	 */
 	public static function get_id( $id_type = null, $results_list = array(), $option_name = '' ) {
-		$result_id = false;
-
-		/*switch ( $id_type ) {
-			case 'lists' :
-				$array_index = 'lists';
-				break;
-			case 'categories' :
-				$array_index = 'categories';
-				break;
-			case 'interests' :
-				$array_index = 'interests';
-				break;
-			default :
-				$array_index = 'lists';
-				break;
-		}*/
-
+		$result = false;		
 		if ( isset( $id_type ) ) {
 			foreach ( $results_list[$id_type] as $list ) {
 				if ( in_array( $option_name, $list ) ) {
-					$result_id = $list['id'];
+					$result = $list['id'];
 				}
 			}
 		}
-		return $result_id;
+		return $result;
 	}
 }
 Affiliates_MailChimp::init();
