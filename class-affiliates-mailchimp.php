@@ -43,6 +43,7 @@ class Affiliates_MailChimp {
 		add_action('affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
 		add_action('affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
 		// cURL tests
+		// @todo this should be removed afters tests are over
 		self::test_curl();
 		
 	}
@@ -709,7 +710,7 @@ class Affiliates_MailChimp {
 			$interests_category = $options['interests_category'];
 			$interest           = $options['interest'];
 
-			$api = new class-mailchimp_api( $mailchimp_options['api_key'] );
+			$api = new Mailchimp_Api( $mailchimp_options['api_key'] );
 			$data = array(
 				'fields' => 'lists.name,lists.id',
 				'count' => 'all'
