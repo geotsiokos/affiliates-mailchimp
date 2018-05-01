@@ -39,9 +39,9 @@ class Affiliates_Mc {
 		add_action( 'delete_user', array( __CLASS__, 'delete_user' ) );
 		add_action( 'set_user_role', array( __CLASS__, 'edit_user_profile_update' ) );
 		// affiliates
-		add_action('affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
-		add_action('affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
-		add_action('affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
+		add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
+		add_action( 'affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
+		add_action( 'affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
 		// cURL tests
 		// @todo this should be removed afters tests are over
 		//self::test_curl();
@@ -62,9 +62,10 @@ class Affiliates_Mc {
 	 * @param int $affiliate_id
 	 */
 	public static function affiliates_added_affiliate ( $affiliate_id ) {
-		$user_id = affiliates_get_affiliate_user($affiliate_id);
-		if ($user_id != null)
+		$user_id = affiliates_get_affiliate_user( $affiliate_id );self::write_log('affiliates added affiliate');
+		if ( $user_id != null )
 			self::user_register( $user_id );
+			//self::write_log('affiliates added affiliate');
 		else { 
 			self::affiliate_register( $affiliate_id );
 		}
@@ -100,7 +101,6 @@ class Affiliates_Mc {
 	// @todo start reviewing this method which applies after affiliates_added_affiliate
 	//       action fires and the new affiliate has a user related
 	public static function user_register ( $user_id ) {
-
 		// get the apikey directly from mc4wp
 		$mailchimp_options = get_option( 'mc4wp', array() );
 
@@ -117,7 +117,7 @@ class Affiliates_Mc {
 			);
 
 			$lists     = $api->get_lists( array(), $data );
-			$list_id   = self::get_id( 'lists', $lists, $list_name );self::write_log( $list_id );
+			$list_id   = self::get_id( 'lists', $lists, $list_name );
 			$user_info = get_userdata( $user_id );
 
 			if ( $list_id ) {
@@ -126,7 +126,7 @@ class Affiliates_Mc {
 					$user_data = array(
 						'email_address' => $user_info->user_email,
 						'status'        => 'subscribed',
-						'merge_fields' => array(
+						'merge_fields'  => array(
 							'FNAME' => $user_info->first_name,
 							'LNAME' => $user_info->last_name
 						)
@@ -186,11 +186,11 @@ class Affiliates_Mc {
 						$interest_id = self::get_id( 'interests', $interests, $interest );
 					}
 					$user_data = array(
-						'email_address' => 'george@itthinx.com',
-						'status' => 'subscribed',
-						'merge_fields' => array(
-							'FNAME' => 'Georgie',
-							'LNAME'=> 'Georgie'
+						'email_address' => $user_info->user_email,
+						'status'        => 'subscribed',
+						'merge_fields'  => array(
+							'FNAME' => $user_info->first_name,
+							'LNAME' => $user_info->last_name
 						),
 						'interests' => array( $interest_id => true )
 					);
@@ -422,54 +422,48 @@ class Affiliates_Mc {
 	}
 
 	public static function delete_user ( $user_id ) {
+		// get the apikey directly from mc4wp
+		$mailchimp_options = get_option( 'mc4wp', array() );
 
+		if ( $mailchimp_options['api_key'] ) {
+			$options   = get_option ( 'affiliates-mailchimp' );
+			$list_name = $options['list_name'];
 
-		$apikey = get_option('affiliates_mailchimp-api_key');
-		$listname = get_option('affiliates_mailchimp-list');
-		$groupname = get_option('affiliates_mailchimp-group');
-		$subgroupname = get_option('affiliates_mailchimp-subgroup');
-		$needconfirm = get_option('affiliates_mailchimp-needconfirm');
+			$api = new Mailchimp_Api( $mailchimp_options['api_key'] );
+			$data = array(
+				'fields' => 'lists.name,lists.id',
+				'count' => 'all'
+			);
 
-		$api = new MCAPI($apikey);
+			$lists     = $api->get_lists( array(), $data );
+			$list_id   = self::get_id( 'lists', $lists, $list_name );
+			$user_info = get_userdata( $user_id );
 
-		$retval = $api->lists();
-
-		$lists = $retval["data"];
-
-		$myList = null;
-
-		if ( count ( $lists ) > 0 ) {
-			foreach ($lists as $list) {
-				if ($list["name"] == $listname)
-					$myList = $list;
-			}
-		}
-
-		if ($myList !== null) {
-			$groups = $api->listInterestGroupings($myList["id"]);
-
-			if ($groups) {
-				$groupingid = 0;
-				foreach ($groups as $group) {
-					if ( $group['name'] == $groupname ) {
-						$groupingid = $group['id'];
+			if ( $list_id ) {
+				if ( $user_info ) {
+					// Check if user belongs to list
+					$user_data = array(
+						'email_address' => $user_info->user_email,
+						'status'        => 'subscribed',
+						'merge_fields'  => array(
+							'FNAME' => $user_info->first_name,
+							'LNAME' => $user_info->last_name
+						)
+					);
+					$check = $api->check_list( array( 'list_id' => $list_id ), $user_data );
+					if ( isset( $check['status'] ) ) {
+						if ( $check['status'] == 'subscribed' ) {
+							$user_data = array(
+								'email_address' => $user_info->user_email,
+								'status'        => 'unsubscribed',
+								
+							);
+							$api->update_subscriber( array( 'list_id' => $list_id ), $user_data );
+						}
 					}
-				}
-
-				if ($groupingid !== 0) {
-
-					$user_info = get_userdata( $user_id );
-
-					$retval = $api->listUnsubscribe( $myList["id"], $user_info->user_email );
-
-					if ( $api->errorCode ) {
-						error_log($api->errorMessage);
-					}
-
 				}
 			}
 		}
-
 	}
 
 	public static function affiliate_deleted ( $aff_id ) {
@@ -835,5 +829,4 @@ class Affiliates_Mc {
 		}
 		return $result;
 	}
-}
-Affiliates_Mc::init();
+} Affiliates_Mc::init();
