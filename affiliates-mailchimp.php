@@ -118,7 +118,6 @@ class Affiliates_MailChimp {
 	if ( isset( $_POST['submit'] ) ) {
 		if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
 			$options['list_name']          = $_POST['list_name'];
-			write_log( $_POST );
 			$options['interests_category'] = $_POST['interests_category'];
 			$options['interest']           = $_POST['interest'];
 			$options['need_confirm']       = $_POST['need_confirm'];
