@@ -154,7 +154,7 @@ class Affiliates_MailChimp {
 					$status = esc_html__( 'Not Connected', 'affiliates-mailchimp' );
 					$description = esc_html__( 'You need to connect your MailChimp for WP plugin to the API with an API key', 'affiliates-mailchimp' );
 				if ( $mc4wp['api_key'] ) {
-					$status = 'Connected';
+					$status = esc_html__( 'Connected', 'affiliates-mailchimp' );
 					require_once 'class-affiliates-mc.php';
 					$description = '';
 				}
