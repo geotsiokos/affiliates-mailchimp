@@ -4,7 +4,7 @@
 /**
  * class-affiliates-mailchimp.php
  *
- * Copyright (c) 2015 www.itthinx.com
+ * Copyright (c) 2018 www.itthinx.com
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,7 +14,7 @@
  *
  * @author itthinx
  * @package affiliates-mailchimp
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 if ( !defined( 'ABSPATH' ) ) {
