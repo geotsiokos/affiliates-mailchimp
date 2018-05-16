@@ -39,7 +39,8 @@ class Affiliates_Mc {
 		add_action( 'delete_user', array( __CLASS__, 'delete_user' ) );
 		add_action( 'set_user_role', array( __CLASS__, 'edit_user_profile_update' ) );
 		// affiliates
-		add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
+		//add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
+		add_action( 'affiliates_stored_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
 		add_action( 'affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
 		add_action( 'affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
 		// cURL tests
