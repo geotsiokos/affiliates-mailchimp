@@ -108,7 +108,7 @@ class Affiliates_MailChimp {
 			$options['list_name']          = $_POST['list_name'];
 			$options['interests_category'] = $_POST['interests_category'];
 			$options['interest']           = $_POST['interest'];
-			$options['need_confirm']       = $_POST['need_confirm'];
+			$options['need_confirm']       = $_POST['need_confirm'];write_log( $_POST['need_confirm']);
 
 		}
 		update_option( 'affiliates-mailchimp', $options );
@@ -214,7 +214,7 @@ class Affiliates_MailChimp {
 				<?php submit_button( __( 'Syncronize', 'affiliates-mailchimp' ), 'secondary', 'generate' ); ?>
 			</th>
 			<td>
-				<p class="description"><?php echo esc_html__( 'Use this for synchronize existing users in website with mailchimp.', 'affiliates-mailchimp' ); ?></p>
+				<p class="description"><?php echo esc_html__( 'Use this to add already existing affiliates in your mailchimp list.', 'affiliates-mailchimp' ); ?></p>
 			</td>
 		</tr>
 	</table>
