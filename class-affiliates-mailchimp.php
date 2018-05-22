@@ -143,7 +143,6 @@ class Affiliates_MailChimp {
 					$description = esc_html__( 'You need to connect your MailChimp for WP plugin to the API with an API key', 'affiliates-mailchimp' );
 				if ( $mc4wp['api_key'] ) {
 					$status = esc_html__( 'Connected', 'affiliates-mailchimp' );
-					require_once 'class-affiliates-mc.php';
 					$description = '';
 				}
 				?>
@@ -191,12 +190,9 @@ class Affiliates_MailChimp {
 					<?php
 				}
 				?>
-				  </select> 
-		
+				  </select>
 						<p class="description"><?php echo esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' ); ?></p>
-				
 			  </tr>
-	  
 		</table>
 		<p>
 		<?php
