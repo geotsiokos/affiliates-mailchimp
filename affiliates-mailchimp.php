@@ -28,3 +28,4 @@ define( 'AFFILIATES_MAILCHIMP_FILE', __FILE__ );
 define( 'AFFILIATES_MAILCHIMP_CORE_DIR', WP_PLUGIN_DIR . '/affiliates-mailchimp' );
 
 require_once 'class-affiliates-mailchimp.php';
+require_once 'class-affiliates-mc.php';
