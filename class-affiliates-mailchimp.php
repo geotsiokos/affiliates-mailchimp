@@ -117,10 +117,6 @@ class Affiliates_MailChimp {
 
 		Affiliates_Mc::synchronize();
 
-	} elseif ( isset( $_POST['import'] ) ) {
-
-		self::toAffiliates();
-
 	}
 
 	$list_name          = isset( $options['list_name'] ) ? $options['list_name'] : '';
@@ -215,22 +211,6 @@ class Affiliates_MailChimp {
 			</th>
 			<td>
 				<p class="description"><?php echo esc_html__( 'Use this to add already existing affiliates in your mailchimp list.', 'affiliates-mailchimp' ); ?></p>
-			</td>
-		</tr>
-	</table>
-	</form>
-	</div>
-	<div class="wrap">
-	<h3><?php echo esc_html__( 'Import', 'affiliates-mailchimp' ); ?></h3>
-
-	<form method="POST" action="">
-	<table class="form-table">
-		<tr>
-			<th scope="row">
-				<?php submit_button( __( 'Import to Affiliates', 'affiliates-mailchimp' ), 'secondary', 'import' ); ?>
-			</th>
-			<td>
-				<p class="description"><?php echo esc_html__( 'Creates many affiliates as MailChimp users you have. It ignores the group and subgroup, all users will be imported from the list.', 'affiliates-mailchimp' ); ?></p>
 			</td>
 		</tr>
 	</table>
