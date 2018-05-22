@@ -1,8 +1,6 @@
 <?php
-//use Mailchimp\MailchimpLists;
-
 /**
- * class-affiliates-mailchimp.php
+ * class-affiliates-mc.php
  *
  * Copyright (c) 2018 www.itthinx.com
  *
@@ -40,7 +38,6 @@ class Affiliates_Mc {
 		//add_action( 'set_user_role', array( __CLASS__, 'edit_user_profile_update' ) );
 		// affiliates
 		add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
-		
 		add_action( 'affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
 		add_action( 'affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
 	}
@@ -111,6 +108,7 @@ class Affiliates_Mc {
 			$list_name          = $options['list_name'];
 			$interests_category = $options['interests_category'];
 			$interest           = $options['interest'];
+			$need_confirm       = $options['need_confirm']; // @todo we need to utilize the opt-in option, aka status= 'pending'
 
 			$api = new Mailchimp_Api( $mailchimp_options['api_key'] );
 			$data = array(
@@ -205,7 +203,11 @@ class Affiliates_Mc {
 							$api->update_subscriber( $interest_parameters, $user_data );
 						}
 					} else {
-						// add
+						// check the opt-in option
+						if ( $need_confirm == '1' ) {
+							$user_data['status'] = 'pending';
+						}
+						// add new subscriber
 						$api->new_subscriber( $interest_parameters, $user_data );
 					}
 				}
@@ -478,7 +480,7 @@ class Affiliates_Mc {
 		if ( get_userdata( $user_id ) ) {
 			$user_data = get_userdata( $user_id );
 			$result = array(
-				'email'      => $user_data->user_email, 
+				'email'      => $user_data->user_email,
 				'first_name' => $user_data->first_name,
 				'last_name'  => $user_data->last_name
 			);
@@ -490,7 +492,7 @@ class Affiliates_Mc {
 	 * Get Affiliate Data by affiliate id
 	 *
 	 * @param int $aff_id
-	 * @return NULL|array 
+	 * @return NULL|array
 	 */
 	private static function get_affiliate_data( $aff_id ) {
 		$result = null;
