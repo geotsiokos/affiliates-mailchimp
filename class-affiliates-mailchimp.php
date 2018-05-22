@@ -108,14 +108,14 @@ class Affiliates_MailChimp {
 			$options['list_name']          = $_POST['list_name'];
 			$options['interests_category'] = $_POST['interests_category'];
 			$options['interest']           = $_POST['interest'];
-			$options['need_confirm']       = $_POST['need_confirm'];write_log( $_POST['need_confirm']);
+			$options['need_confirm']       = $_POST['need_confirm'];
 
 		}
 		update_option( 'affiliates-mailchimp', $options );
 
 	} elseif ( isset( $_POST['generate'] ) ) {
 
-		self::synchronize();
+		Affiliates_Mc::synchronize();
 
 	} elseif ( isset( $_POST['import'] ) ) {
 
