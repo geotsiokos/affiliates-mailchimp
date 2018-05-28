@@ -105,6 +105,7 @@ class Affiliates_MailChimp {
 	<?php
 	if ( isset( $_POST['submit'] ) ) {
 		if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
+			$options['api_key']            = $_POST['api_key'];
 			$options['list_name']          = $_POST['list_name'];
 			$options['interests_category'] = $_POST['interests_category'];
 			$options['interest']           = $_POST['interest'];
@@ -119,10 +120,15 @@ class Affiliates_MailChimp {
 
 	}
 
+	$api_key            = isset( $options['api_key'] ) ? $options['api_key'] : null;
 	$list_name          = isset( $options['list_name'] ) ? $options['list_name'] : '';
 	$interests_category = isset( $options['interests_category'] ) ? $options['interests_category'] : '';
 	$interest           = isset( $options['interest'] ) ? $options['interest'] : '';
 	$need_confirm       = isset( $options['need_confirm'] ) ? $options['need_confirm'] : 0;
+
+	if ( !$api_key ) {
+		$description = esc_html__( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
+	}
 	?>
 
 	<h2>
@@ -132,17 +138,7 @@ class Affiliates_MailChimp {
 		<table class="form-table">
 			<tr valign="top">
 			<th scope="row"><?php echo esc_html__( 'API Key:', 'affiliates-mailchimp' ); ?></th>
-			<td>
-				<?php
-					$mc4wp = get_option( 'mc4wp', array() );
-					$status = esc_html__( 'Not Connected', 'affiliates-mailchimp' );
-					$description = esc_html__( 'You need to connect your MailChimp for WP plugin to the API with an API key', 'affiliates-mailchimp' );
-				if ( $mc4wp['api_key'] ) {
-					$status = esc_html__( 'Connected', 'affiliates-mailchimp' );
-					$description = '';
-				}
-				?>
-				<label> <?php echo esc_html( $status ); ?></label>
+			<td><input type="text" name="api_key" value="<?php echo esc_attr( $api_key ); ?>" />
 				<p class="description"><?php echo esc_html( $description ); ?></p>
 			</td>
 			</tr>
@@ -163,7 +159,7 @@ class Affiliates_MailChimp {
 			</tr>
 
 			  <tr valign="top">
-			<th scope="row"><?php echo esc_html__( 'Need confirm:', 'affiliates-mailchimp' ); ?></th>
+			<th scope="row"><?php echo esc_html__( 'Confirm Subscription:', 'affiliates-mailchimp' ); ?></th>
 			<td>
 				<select name="need_confirm">
 				<?php
