@@ -58,7 +58,7 @@ class Affiliates_Mc {
 	 * @param int $affiliate_id
 	 */
 	public static function affiliates_updated_affiliate( $affiliate_id ) {
-		$user_id = null; //affiliates_get_affiliate_user( $affiliate_id );
+		$user_id = null;
 		if ( $user_id != null ) {
 			$user_data = self::get_user_data( $user_id );
 			self::manage_subscriber( $user_id, $user_data );
@@ -92,11 +92,9 @@ class Affiliates_Mc {
 	 * @param array $user_info
 	 */
 	public static function manage_subscriber( $user_id, $user_info ) {
-		// get the apikey directly from mc4wp
-		$mailchimp_options = get_option( 'mc4wp', array() );
+		$options = get_option( 'affiliates-mailchimp' );
 
-		if ( $mailchimp_options['api_key'] ) {
-			$options = get_option( 'affiliates-mailchimp' );
+		if ( $options['api_key'] ) {
 			$list_name          = $options['list_name'];
 			$interests_category = $options['interests_category'];
 			$interest           = $options['interest'];
@@ -213,10 +211,9 @@ class Affiliates_Mc {
 	 * @param array $user_info
 	 */
 	public static function delete_subscriber( $user_id, $user_info ) {
-		// get the apikey directly from mc4wp
-		$mailchimp_options = get_option( 'mc4wp', array() );
+		$options   = get_option( 'affiliates-mailchimp' );
 
-		if ( $mailchimp_options['api_key'] ) {
+		if ( $options['api_key'] ) {
 			$options   = get_option( 'affiliates-mailchimp' );
 			$list_name = $options['list_name'];
 

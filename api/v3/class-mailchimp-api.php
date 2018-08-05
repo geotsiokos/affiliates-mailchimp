@@ -55,20 +55,10 @@ class Mailchimp_Api {
 	 *
 	 * @param string $apikey
 	 * @param array $opts
-	 * @throws \Exception
-	 * @throws Mailchimp_Error
 	 */
 	public function __construct( $apikey = null, $opts = array() ) {
 		if ( !function_exists( 'curl_init' ) || !function_exists( 'curl_setopt' ) ) {
-			throw new \Exception( "cURL support is required, but can't be found." );
-		}
-
-		if ( !$apikey ) {
-			$apikey = $this->readConfigs();
-		}
-
-		if ( !$apikey ) {
-			throw new Mailchimp_Error( 'You must provide a MailChimp API key' );
+			exit;
 		}
 
 		$this->apikey = $apikey;
@@ -291,41 +281,5 @@ class Mailchimp_Api {
 		}
 
 		return $result;
-	}
-
-	public function readConfigs() {
-		$paths = array( '~/.mailchimp.key', '/etc/mailchimp.key' );
-		foreach ( $paths as $path ) {
-			if ( file_exists( $path ) ) {
-				$apikey = trim( file_get_contents( $path ) );
-				if ( $apikey ) {
-					return $apikey;
-				}
-			}
-		}
-		return false;
-	}
-
-	public function castError( $result ) {
-		if ( $result['status'] !== 'error' || !$result['name'] ) {
-			throw new Mailchimp_Error( 'We received an unexpected error: ' . json_encode( $result ) );
-		}
-
-		$class = ( isset( self::$error_map[$result['name']] ) ) ? self::$error_map[$result['name']] : 'Mailchimp_Error';
-		return new $class( $result['error'], $result['code'] );
-	}
-
-	public function log( $msg ) {
-		if ( $this->debug ) {
-			error_log( $msg );
-		}
-	}
-	//@todo after tests are over this should be removed
-	public function write_log ( $log )  {
-		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
-		} else {
-			error_log( $log );
-		}
 	}
 }
