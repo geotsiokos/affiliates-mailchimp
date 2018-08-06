@@ -15,15 +15,14 @@ Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates 
 This plugin integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [Events Manager](https://wordpress.org/plugins/events-manager/).
 
 This integration features:
-- Grant commissions to affiliates for referred bookings.
-- Supports referrals based on coupons.
-- Records essential booking data for referred bookings.
+- Add new affiliates to your MailChimp mailing list.
+- Sync existing affiliates with your MailChimp mailing list.
 
 Requirements:
 
-- [Events Manaer](https://wordpress.org/plugins/events-manager/)
 - [Affiliates](https://wordpress.org/plugins/affiliates/) or [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) or [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) : This integration works fully with all versions.
 - [Affiliates MailChimp](https://wordpress.org/plugins/affiliates-mailchimp) : This plugin.
+- An active account in MailChimp
 
 Documentation:
 
@@ -34,8 +33,8 @@ Documentation:
 == Installation ==
 
 1. Install and activate [Affiliates](https://wordpress.org/plugins/affiliates/) or [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) or [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/).
-3. Install and activate this integration plugin [Affiliates Events Manager](https://wordpress.org/plugins/affiliates-events-manager).
-4. Adjust the settings as needed to let affiliate gather referrals for events. Please refer to the documentation for details.
+2. Install and activate this integration plugin [Affiliates MailChimp](https://wordpress.org/plugins/affiliates-mailchimp).
+3. Create a List in your MailChimp account. Use this List name in the  Please refer to the documentation for details.
 
 Note that you can install the plugins from your WordPress installation directly: use the *Add new* option found in the *Plugins* menu.
 You can also upload and extract them in your site's `/wp-content/plugins/` directory or use the *Upload* option.
@@ -56,9 +55,10 @@ Please refer to the Documentation for details:
 
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
-* Adds support MailChimp API v3.
+* Adds support for MailChimp API v3.
 * Wordpress 4.9.8 compatible.
 
 == Upgrade Notice ==
 
+This version is compatible with MailChimp API v3.
 This version is compatible with Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x.
