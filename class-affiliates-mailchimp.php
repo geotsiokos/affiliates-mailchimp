@@ -126,6 +126,7 @@ class Affiliates_MailChimp {
 	$interest           = isset( $options['interest'] ) ? $options['interest'] : '';
 	$need_confirm       = isset( $options['need_confirm'] ) ? $options['need_confirm'] : 0;
 
+	$description = '';
 	if ( !$api_key ) {
 		$description = esc_html__( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
 	}
@@ -139,7 +140,7 @@ class Affiliates_MailChimp {
 			<tr valign="top">
 			<th scope="row"><?php echo esc_html__( 'API Key:', 'affiliates-mailchimp' ); ?></th>
 			<td><input type="text" name="api_key" value="<?php echo esc_attr( $api_key ); ?>" />
-				<p class="description"><?php echo esc_html( $description ); ?></p>
+				<p class="description"><?php echo esc_html( $description ); //write_log( $options);?></p>
 			</td>
 			</tr>
 	
@@ -189,7 +190,7 @@ class Affiliates_MailChimp {
 		<p>
 		<?php
 			echo wp_nonce_field( 'aff-mc-set-admin-options', 'aff-mailchimp-nonce', true, false );
-			echo '<input type="submit" name="submit" value="' . esc_attr__( 'Save', 'affiliates-mailchimp' ) . '"/>';
+			echo '<input class="button button-primary" type="submit" name="submit" value="' . esc_attr__( 'Save', 'affiliates-mailchimp' ) . '"/>';
 		?>
 		</p>
 	</form>
