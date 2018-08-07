@@ -42,7 +42,7 @@ class Affiliates_MailChimp {
 		load_plugin_textdomain( 'affiliates-mailchimp', false, 'affiliates-mailchimp/languages' );
 		add_action( 'init', array( __CLASS__, 'wp_init' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
-		register_uninstall_hook( __FILE__, array( __CLASS__, 'uninstall' ) );
+		//register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate' ) );
 	}
 
 	/**
@@ -98,7 +98,6 @@ class Affiliates_MailChimp {
 	 * Show Groups MailChimp setting page.
 	 */
 	public static function affiliates_mailchimp_settings() {
-		$output = '';
 		$options = array();
 		if ( !current_user_can( AFFILIATES_ADMINISTER_OPTIONS ) ) {
 			wp_die( esc_html__( 'Access denied.', 'affiliates-mailchimp' ) );
@@ -193,7 +192,7 @@ class Affiliates_MailChimp {
 			  <th scope="row"><?php echo esc_html__( 'Delete Settings:', 'affiliates-mailchimp' ); ?></th>
 			  <td>
 			  <input type="checkbox" name="delete_settings" <?php echo ( esc_attr( $delete_settings ) == 1 ? ' checked="checked" ' : '' ); ?> />
-			  <p class="description"><?php echo esc_html__( 'CAUTION: If this option is active while the plugin is uninstalled, the above settings will be DELETED. If you want to keep these settings and are going to deactivate it, make sure to keep a note or backup or do not enable this option.' , 'affiliates-mailchimp' ); ?></p>
+			  <p class="description"><?php echo esc_html__( 'CAUTION: If this option is enabled while the plugin is deactivated, the above settings will be DELETED. If you want to keep these settings and are going to deactivate it, make sure to keep a note or backup or do not enable this option.' , 'affiliates-mailchimp' ); ?></p>
 			  </td>
 			  </tr>
 		</table>
@@ -229,11 +228,11 @@ class Affiliates_MailChimp {
 	/**
 	 * Option to delete plugin settings upon uninstall
 	 */
-	public static function uninstall() {
+	/*public static function deactivate() {
 		$options = get_option( 'affiliates-mailchimp' );write_log('deacti');
 		if ( isset( $options['delete_settings'] ) && $options['delete_settings'] == 1 ) {
 			delete_option( 'affiliates-mailchimp' );
 		}
-	}
+	}*/
 }
 Affiliates_MailChimp::init();
