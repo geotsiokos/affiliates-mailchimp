@@ -138,6 +138,7 @@ class Affiliates_MailChimp {
 		</h2>
 		<form method="post" name="options" action="">
 			<table class="form-table">
+
 				<tr valign="top">
 				<th scope="row"><?php echo esc_html__( 'API Key:', 'affiliates-mailchimp' ); ?></th>
 				<td><input type="text" name="api_key" value="<?php echo esc_attr( $api_key ); ?>" />
@@ -145,22 +146,22 @@ class Affiliates_MailChimp {
 				</td>
 				</tr>
 		
-						 <tr valign="top">
+				<tr valign="top">
 				<th scope="row"><?php echo esc_html__( 'List name:', 'affiliates-mailchimp' ); ?></th>
 				<td><input type="text" name="list_name" value="<?php echo esc_attr( $list_name ); ?>" /></td>
 				</tr>
 		
-					<tr valign="top">
+				<tr valign="top">
 				<th scope="row"><?php echo esc_html__( 'Interest Category:', 'affiliates-mailchimp' ); ?></th>
 				<td><input type="text" name="interests_category" value="<?php echo esc_attr( $interests_category ); ?>" /></td>
 				</tr>
 		
-						<tr valign="top">
+				<tr valign="top">
 				<th scope="row"><?php echo esc_html__( 'Interest:', 'affiliates-mailchimp' ); ?></th>
 				<td><input type="text" name="interest" value="<?php echo esc_attr( $interest ); ?>" /></td>
 				</tr>
-	
-				  <tr valign="top">
+
+				<tr valign="top">
 				<th scope="row"><?php echo esc_html__( 'Confirm Subscription:', 'affiliates-mailchimp' ); ?></th>
 				<td>
 					<select name="need_confirm">
@@ -187,6 +188,7 @@ class Affiliates_MailChimp {
 					  </select>
 							<p class="description"><?php echo esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' ); ?></p>
 				  </tr>
+
 				  <tr>
 				  <th scope="row"><?php echo esc_html__( 'Delete Settings:', 'affiliates-mailchimp' ); ?></th>
 				  <td>
@@ -194,6 +196,7 @@ class Affiliates_MailChimp {
 				  <p class="description"><?php echo esc_html__( 'CAUTION: If this option is enabled while the plugin is deactivated, the above settings will be DELETED. If you want to keep these settings and are going to deactivate it, make sure to keep a note or backup or do not enable this option.' , 'affiliates-mailchimp' ); ?></p>
 				  </td>
 				  </tr>
+
 			</table>
 			<p>
 			<?php
