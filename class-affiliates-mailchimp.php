@@ -97,15 +97,14 @@ class Affiliates_MailChimp {
 	 * Show Groups MailChimp setting page.
 	 */
 	public static function affiliates_mailchimp_settings() {
+		$output = '';
+		$output_sync = '';
 		$options = array();
 		if ( !current_user_can( AFFILIATES_ADMINISTER_OPTIONS ) ) {
 			wp_die( esc_html__( 'Access denied.', 'affiliates-mailchimp' ) );
 		}
 		$options = get_option( 'affiliates-mailchimp' );
-		?>
-		<div class="wrap">
 
-		<?php
 		if ( isset( $_POST['submit'] ) ) {
 			if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
 				$options['api_key']            = $_POST['api_key'];
@@ -116,8 +115,10 @@ class Affiliates_MailChimp {
 				$options['delete_settings']    = isset( $_POST['delete_settings'] ) ? 1 : 0;
 			}
 			update_option( 'affiliates-mailchimp', $options );
-		} elseif ( isset( $_POST['generate'] ) ) {
-			Affiliates_Mc::synchronize();
+		} else {
+			if ( isset( $_POST['generate'] ) ) {
+				Affiliates_Mc::synchronize();
+			}
 		}
 
 		$api_key            = isset( $options['api_key'] ) ? $options['api_key'] : null;
@@ -131,100 +132,127 @@ class Affiliates_MailChimp {
 		if ( !$api_key ) {
 			$description = esc_html__( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
 		}
-		?>
 
-		<h2>
-			<?php echo esc_html__( 'Affiliates MailChimp', 'affiliates-mailchimp' ); ?>
-		</h2>
-		<form method="post" name="options" action="">
-			<table class="form-table">
+		$output .= '<div class="wrap">';
+		$output .= '<h2>';
+		$output .= esc_html__( 'Affiliates MailChimp', 'affiliates-mailchimp' );
+		$output .= '</h2>';
+		$output .= '<form method="post" name="options" action="">';
+		$output .= '<table class="form-table">';
 
-				<tr valign="top">
-				<th scope="row"><?php echo esc_html__( 'API Key:', 'affiliates-mailchimp' ); ?></th>
-				<td><input type="text" name="api_key" value="<?php echo esc_attr( $api_key ); ?>" />
-					<p class="description"><?php echo esc_html( $description ); ?></p>
-				</td>
-				</tr>
-		
-				<tr valign="top">
-				<th scope="row"><?php echo esc_html__( 'List name:', 'affiliates-mailchimp' ); ?></th>
-				<td><input type="text" name="list_name" value="<?php echo esc_attr( $list_name ); ?>" /></td>
-				</tr>
-		
-				<tr valign="top">
-				<th scope="row"><?php echo esc_html__( 'Interest Category:', 'affiliates-mailchimp' ); ?></th>
-				<td><input type="text" name="interests_category" value="<?php echo esc_attr( $interests_category ); ?>" /></td>
-				</tr>
-		
-				<tr valign="top">
-				<th scope="row"><?php echo esc_html__( 'Interest:', 'affiliates-mailchimp' ); ?></th>
-				<td><input type="text" name="interest" value="<?php echo esc_attr( $interest ); ?>" /></td>
-				</tr>
+		$output .= '<tr valign="top">';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'API Key:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<input type="text" name="api_key" value="' . esc_attr( $api_key ) . '" />';
+		$output .= '<p class="description">';
+		$output .= esc_html( $description );
+		$output .= '</p>';
+		$output .= '</td>';
+		$output .= '</tr>';
 
-				<tr valign="top">
-				<th scope="row"><?php echo esc_html__( 'Confirm Subscription:', 'affiliates-mailchimp' ); ?></th>
-				<td>
-					<select name="need_confirm">
-						<?php
-						if ( $need_confirm == '1' ) {
-							?>
-							<option value="1" SELECTED><?php echo esc_html__( 'YES', 'affiliates-mailchimp' ); ?></option>
-							<?php
-						} else {
-							?>
-							<option value="1"><?php echo esc_html__( 'YES', 'affiliates-mailchimp' ); ?></option>
-							<?php
-						}
-						if ( $need_confirm == '0' ) {
-							?>
-						<option value="0" SELECTED><?php echo esc_html__( 'NO','affiliates-mailchimp' ); ?></option>
-							<?php
-						} else {
-							?>
-						<option value="0"><?php echo esc_html__( 'NO','affiliates-mailchimp' ); ?></option>
-							<?php
-						}
-						?>
-					  </select>
-							<p class="description"><?php echo esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' ); ?></p>
-				  </tr>
+		$output .= '<tr valign="top">';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'List name:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<input type="text" name="list_name" value="' . esc_attr( $list_name ) . '" />';
+		$output .= '</td>';
+		$output .= '</tr>';
 
-				  <tr>
-				  <th scope="row"><?php echo esc_html__( 'Delete Settings:', 'affiliates-mailchimp' ); ?></th>
-				  <td>
-				  <input type="checkbox" name="delete_settings" <?php echo ( esc_attr( $delete_settings ) == 1 ? ' checked="checked" ' : '' ); ?> />
-				  <p class="description"><?php echo esc_html__( 'CAUTION: If this option is enabled while the plugin is deactivated, the above settings will be DELETED. If you want to keep these settings and are going to deactivate it, make sure to keep a note or backup or do not enable this option.' , 'affiliates-mailchimp' ); ?></p>
-				  </td>
-				  </tr>
+		$output .= '<tr valign="top">';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'Interest Category:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<input type="text" name="interests_category" value="' . esc_attr( $interests_category ) . '" />';
+		$output .= '</td>';
+		$output .= '</tr>';
 
-			</table>
-			<p>
-			<?php
-				echo wp_nonce_field( 'aff-mc-set-admin-options', 'aff-mailchimp-nonce', true, false );
-				echo '<input class="button button-primary" type="submit" name="submit" value="' . esc_attr__( 'Save', 'affiliates-mailchimp' ) . '"/>';
-			?>
-			</p>
-		</form>
+		$output .= '<tr valign="top">';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'Interest:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<input type="text" name="interest" value="' . esc_attr( $interest ) . '" />';
+		$output .= '</td>';
+		$output .= '</tr>';
 
-		</div>
+		$output .= '<tr valign="top">';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'Confirm Subscription:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<select name="need_confirm">';
 
-		<div class="wrap">
-		<h3><?php echo esc_html__( 'Synchronize', 'affiliates-mailchimp' ); ?></h3>
-	
-		<form method="POST" action="">
-		<table class="form-table">
-			<tr>
-				<th scope="row">
-					<?php submit_button( __( 'Syncronize', 'affiliates-mailchimp' ), 'secondary', 'generate' ); ?>
-				</th>
-				<td>
-					<p class="description"><?php echo esc_html__( 'Use this to add already existing affiliates in your mailchimp list.', 'affiliates-mailchimp' ); ?></p>
-				</td>
-			</tr>
-		</table>
-		</form>
-		</div>
-		<?php
+		$output .= '<option value="1" ' . ( $need_confirm == '1' ? 'SELECTED' : '' ) . '>';
+		$output .= esc_html__( 'YES', 'affiliates-mailchimp' );
+		$output .= '</option>';
+
+		$output .= '<option value="0" ' . ( $need_confirm == '0' ? 'SELECTED' : '' ) . '>';
+		$output .= esc_html__( 'NO','affiliates-mailchimp' );
+		$output .= '</option>';
+
+		$output .= '</select>';
+		$output .= '<p class="description">';
+		$output .= esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' );
+		$output .= '</p>';
+		$output .= '</tr>';
+
+		$output .= '<tr>';
+		$output .= '<th scope="row">';
+		$output .= esc_html__( 'Delete Settings:', 'affiliates-mailchimp' );
+		$output .= '</th>';
+		$output .= '<td>';
+		$output .= '<input type="checkbox" name="delete_settings" ' . ( esc_attr( $delete_settings ) == 1 ? ' checked="checked" ' : '' ) . '/>';
+		$output .= '<p class="description">';
+		$output .= esc_html__( 'CAUTION: If this option is enabled while the plugin is deactivated, the above settings will be DELETED. If you want to keep these settings and are going to deactivate it, make sure to keep a note or backup or do not enable this option.' , 'affiliates-mailchimp' );
+		$output .= '</p>';
+		$output .= '</td>';
+		$output .= '</tr>';
+
+		$output .= '</table>';
+		$output .= '<p>';
+
+		$output .= wp_nonce_field( 'aff-mc-set-admin-options', 'aff-mailchimp-nonce', true, false );
+		$output .= '<input class="button button-primary" type="submit" name="submit" value="' . esc_attr__( 'Save', 'affiliates-mailchimp' ) . '"/>';
+
+		$output .= '</p>';
+		$output .= '</form>';
+
+		$output .= '</div>';
+
+		// @codingStandardsIgnoreStart
+		echo $output;
+		// @codingStandardsIgnoreEnd
+
+		$output_sync .= '<div class="wrap">';
+		$output_sync .= '<h3>';
+		$output_sync .= esc_html__( 'Synchronize', 'affiliates-mailchimp' );
+		$output_sync .= '</h3>';
+
+		$output_sync .= '<form method="POST" action="">';
+		$output_sync .= '<table class="form-table">';
+
+		$output_sync .= '<tr>';
+		$output_sync .= '<th scope="row">';
+		$output_sync .= '<input class="button" type="submit" name="submit" value="' . esc_attr__( 'Syncronize', 'affiliates-mailchimp' ) . '">';
+		$output_sync .= '</th>';
+		$output_sync .= '<td>';
+		$output_sync .= '<p class="description">';
+		$output_sync .= esc_html__( 'Click this button to add existing affiliates in your mailchimp list.', 'affiliates-mailchimp' );
+		$output_sync .= '</p>';
+		$output_sync .= '</td>';
+		$output_sync .= '</tr>';
+
+		$output_sync .= '</table>';
+		$output_sync .= '</form>';
+		$output_sync .= '</div>';
+
+		// @codingStandardsIgnoreStart
+		echo $output_sync;
+		// @codingStandardsIgnoreEnd
 	}
 }
 Affiliates_MailChimp::init();
