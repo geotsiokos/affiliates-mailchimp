@@ -1,5 +1,9 @@
 Affiliates MailChimp               Changelog              www.itthinx.com
 
+= 3.0.1 =
+
+- Added option to delete settings upon deactivation
+
 = 3.0.0 =
 
 - Compatible with the latest Mailchimp API v3.

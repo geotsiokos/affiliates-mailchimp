@@ -34,7 +34,9 @@ Documentation:
 
 1. Install and activate [Affiliates](https://wordpress.org/plugins/affiliates/) or [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) or [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/).
 2. Install and activate this integration plugin [Affiliates MailChimp](https://wordpress.org/plugins/affiliates-mailchimp).
-3. Create a List in your MailChimp account. Use this List name in the  Please refer to the documentation for details.
+3. Get your [MailChimp API key](https://mailchimp.com/help/about-api-keys/) and add it to the integration settings. 
+4. Create a List in your MailChimp account. Use this List name in the integration settings.
+Please refer to the documentation for details.
 
 Note that you can install the plugins from your WordPress installation directly: use the *Add new* option found in the *Plugins* menu.
 You can also upload and extract them in your site's `/wp-content/plugins/` directory or use the *Upload* option.
