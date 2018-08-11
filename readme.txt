@@ -55,10 +55,14 @@ Please refer to the Documentation for details:
 
 == Changelog ==
 
+= 3.0.1 =
+* Added option to delete settings upon deactivation.
+* Wordpress 4.9.8 compatible.
+
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
 * Adds support for MailChimp API v3.
-* Wordpress 4.9.8 compatible.
+
 
 == Upgrade Notice ==
 
