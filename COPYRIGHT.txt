@@ -1,6 +1,6 @@
-Affiliates Events Manager Integration                            COPYRIGHT.txt
+Affiliates MailChimp Integration                            COPYRIGHT.txt
  
- Copyright 2015 - 2017 www.itthinx.com
+ Copyright 2015 - 2018 www.itthinx.com
  
  The files COPYRIGHT.txt and LICENSE.txt as well as ALL NOTICES IN THE
  HEADERS OF ALL FILES MUST BE KEPT INTACT.
@@ -28,6 +28,5 @@ Affiliates Events Manager Integration                            COPYRIGHT.txt
  
  Visit http://www.itthinx.com/ for help on this and other plugins.
  
- Plugin page: http://www.itthinx.com/plugins/affiliates-events-manager
+ Plugin page: http://www.itthinx.com/plugins/affiliates-mailchimp
  Affiliates plugin: https://wordpress.org/plugins/affiliates
- Events Manager plugin: https://wordpress.org/plugins/events-manager
