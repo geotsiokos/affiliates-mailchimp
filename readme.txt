@@ -1,18 +1,18 @@
 === Affiliates MailChimp ===
 Contributors: itthinx, proaktion, gtsiokos
 Donate link: http://www.itthinx.com/shop/
-Tags: affiliate, affiliates, affiliate marketing, referral, growth marketing, mail list, affiliate plugin, affiliate tool, e-commerce, lead, lead, marketing, money, partner, track, newsletter
+Tags: affiliate, affiliates, referral, growth marketing, MailChimp
 Requires at least: 4.0.0
 Tested up to: 4.9.8
 Requires PHP: 5.5.0
 Stable tag: 3.0.0
 License: GPLv3
 
-Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [Events Manager](https://wordpress.org/plugins/events-manager/).
+Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [MailChimp](https://mailchimp.com).
 
 == Description ==
 
-This plugin integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [Events Manager](https://wordpress.org/plugins/events-manager/).
+This plugin integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [MailChimp](https://mailchimp.com).
 
 This integration features:
 - Add new affiliates to your MailChimp mailing list.
