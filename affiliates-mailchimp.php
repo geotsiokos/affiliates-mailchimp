@@ -18,7 +18,7 @@
  * @package affiliates-mailchimp
  * @since 3.0.0
  *
- * Plugin Name: Affiliates MailChimp Integration
+ * Plugin Name: Affiliates MailChimp
  * Plugin URI: http://www.itthinx.com/plugins/affiliates-mailchimp/
  * Description: Integrates the MailChimp service with Affiliates.
  * Author: itthinx, proaktion, gtsiokos
