@@ -47,7 +47,10 @@ Please refer to the documentation.
 
 == Screenshots ==
 
-Please refer to the Documentation for details:
+1. Affiliates MailChimp menu item in the Affiliates menu.
+2. Settings of the Affiliates MailChimp integration.
+
+Please refer to the Documentation for further details:
 
 - [Integration with Affiliates](http://docs.itthinx.com/document/affiliates/setup/settings/integrations/)
 - [Integration with Affiliates Pro](http://docs.itthinx.com/document/affiliates-pro//setup/settings/integrations/)
