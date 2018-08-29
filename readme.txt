@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, affiliate marketing, referral, growth marketing, ma
 Requires at least: 4.0.0
 Tested up to: 4.9.8
 Requires PHP: 5.5.0
-Stable tag: 2.1.0
+Stable tag: 3.0.0
 License: GPLv3
 
 Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [Events Manager](https://wordpress.org/plugins/events-manager/).
@@ -55,13 +55,11 @@ Please refer to the Documentation for details:
 
 == Changelog ==
 
-= 3.0.1 =
-* Added option to delete settings upon deactivation.
-* Wordpress 4.9.8 compatible.
-
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
 * Adds support for MailChimp API v3.
+* Added option to delete settings upon deactivation.
+* Wordpress 4.9.8 compatible.
 
 
 == Upgrade Notice ==
