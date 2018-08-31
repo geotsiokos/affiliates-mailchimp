@@ -36,12 +36,12 @@ define( 'AFFILIATES_MAILCHIMP_PLUGIN_DOMAIN', 'affiliates-mailchimp' );
 define( 'AFFILIATES_MAILCHIMP_FILE', __FILE__ );
 define( 'AFFILIATES_MAILCHIMP_CORE_DIR', WP_PLUGIN_DIR . '/affiliates-mailchimp' );
 
-register_deactivation_hook( __FILE__, 'deactivate' );
+register_deactivation_hook( __FILE__, 'aff_mailchimp_deactivate' );
 
 /**
  * Option to delete plugin setting upon deactivation
  */
-function deactivate() {
+function aff_mailchimp_deactivate() {
 	$options = get_option( 'affiliates-mailchimp' );
 	if ( isset( $options['delete_settings'] ) && $options['delete_settings'] == 1 ) {
 		delete_option( 'affiliates-mailchimp' );
