@@ -107,11 +107,11 @@ class Affiliates_MailChimp {
 
 		if ( isset( $_POST['submit'] ) ) {
 			if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
-				$options['api_key']            = !empty( $_POST['api_key'] );
-				$options['list_name']          = !empty( $_POST['list_name'] );
-				$options['interests_category'] = !empty( $_POST['interests_category'] );
-				$options['interest']           = !empty( $_POST['interest'] );
-				$options['need_confirm']       = !empty( $_POST['need_confirm'] );
+				$options['api_key']            = isset( $_POST['api_key'] ) ? esc_html( $_POST['api_key'] ) : '';
+				$options['list_name']          = isset( $_POST['list_name'] ) ? esc_html( $_POST['list_name'] ) : '';
+				$options['interests_category'] = isset( $_POST['interests_category'] ) ? esc_html( $_POST['interests_category'] ) : '';
+				$options['interest']           = isset( $_POST['interest'] ) ? esc_html( $_POST['interest'] ) : '';
+				$options['need_confirm']       = isset( $_POST['need_confirm'] ) ? 1 : 0;
 				$options['delete_settings']    = isset( $_POST['delete_settings'] ) ? 1 : 0;
 			}
 			update_option( 'affiliates-mailchimp', $options );

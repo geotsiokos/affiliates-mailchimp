@@ -47,6 +47,9 @@ Please refer to the documentation.
 
 == Screenshots ==
 
+1. Affiliates MailChimp menu item in the Affiliates menu.
+2. Settings of the Affiliates MailChimp integration.
+
 Please refer to the Documentation for details:
 
 - [Integration with Affiliates](http://docs.itthinx.com/document/affiliates/setup/settings/integrations/)
@@ -54,6 +57,10 @@ Please refer to the Documentation for details:
 - [Integration with Affiliates Enterprise](http://docs.itthinx.com/document/affiliates-enterprise/setup/settings/integrations/)
 
 == Changelog ==
+
+= 3.0.1 =
+* Improved code formating
+* Updated data peristence function
 
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
