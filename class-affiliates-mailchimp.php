@@ -130,7 +130,7 @@ class Affiliates_MailChimp {
 
 		$description = '';
 		if ( !$api_key ) {
-			$description = esc_html__( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
+			$description = __( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
 		}
 
 		$output .= '<div class="wrap">';
