@@ -4,7 +4,7 @@ Donate link: http://www.itthinx.com/shop/
 Tags: affiliate, affiliates, referral, growth marketing, MailChimp
 Requires at least: 4.0.0
 Tested up to: 4.9.8
-Requires PHP: 5.5.0
+Requires PHP: 5.6.0
 Stable tag: 3.0.1
 License: GPLv3
 
@@ -59,8 +59,11 @@ Please refer to the Documentation for further details:
 == Changelog ==
 
 = 3.0.1 =
-* Improved code formating
-* Updated data peristence function
+* Fixed unspecific function name used for the deactivation hook.
+* Security fix : fixed unsanitized $_POST data stored.
+* Improved code formatting.
+* Added the plugin version constant.
+* Updated the minimum PHP version required.
 
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
@@ -68,8 +71,7 @@ Please refer to the Documentation for further details:
 * Added option to delete settings upon deactivation.
 * Wordpress 4.9.8 compatible.
 
-
 == Upgrade Notice ==
 
-This version is compatible with MailChimp API v3.
-This version is compatible with Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x.
+- This version is compatible with MailChimp API v3 - previous version's of MailChimp's API are not supported.
+- This version is compatible with Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x. but version 3.x is recommended.

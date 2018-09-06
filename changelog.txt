@@ -1,12 +1,14 @@
-Affiliates MailChimp               Changelog              www.itthinx.com
+Affiliates MailChimp                 Changelog                 www.itthinx.com
 
 = 3.0.1 =
-
-- Improved code formating
-- Updated data peristence function
+* Fixed unspecific function name used for the deactivation hook.
+* Security fix : fixed unsanitized $_POST data stored.
+* Improved code formatting.
+* Added the plugin version constant.
+* Updated the minimum PHP version required.
 
 = 3.0.0 =
-
-- Compatible with the latest Mailchimp API v3.
-- Wordpress 4.9.8 compatible.
-- Added option to delete settings upon deactivation
+* Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
+* Adds support for MailChimp API v3.
+* Added option to delete settings upon deactivation.
+* Wordpress 4.9.8 compatible.

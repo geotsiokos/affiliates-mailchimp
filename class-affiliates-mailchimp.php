@@ -111,8 +111,8 @@ class Affiliates_MailChimp {
 				$options['list_name']          = isset( $_POST['list_name'] ) ? sanitize_text_field( $_POST['list_name'] ) : '';
 				$options['interests_category'] = isset( $_POST['interests_category'] ) ? sanitize_text_field( $_POST['interests_category'] ) : '';
 				$options['interest']           = isset( $_POST['interest'] ) ? sanitize_text_field( $_POST['interest'] ) : '';
-				$options['need_confirm']       = isset( $_POST['need_confirm'] ) ? 1 : 0;
-				$options['delete_settings']    = isset( $_POST['delete_settings'] ) ? 1 : 0;
+				$options['need_confirm']       = !empty( $_POST['need_confirm'] ) ? 1 : 0;
+				$options['delete_settings']    = !empty( $_POST['delete_settings'] ) ? 1 : 0;
 			}
 			update_option( 'affiliates-mailchimp', $options );
 		} else {
