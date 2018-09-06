@@ -64,6 +64,7 @@ Please refer to the Documentation for further details:
 * Improved code formatting.
 * Added the plugin version constant.
 * Updated the minimum PHP version required.
+* Fixed some descriptions in the settings.
 
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.

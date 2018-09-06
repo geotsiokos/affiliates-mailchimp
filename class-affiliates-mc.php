@@ -256,7 +256,7 @@ class Affiliates_Mc {
 	}
 
 	/**
-	 * Add existing affiliates to mailchimp list
+	 * Add existing affiliates to MailChimp list
 	 */
 	public static function synchronize() {
 		$affiliates = affiliates_get_affiliates();

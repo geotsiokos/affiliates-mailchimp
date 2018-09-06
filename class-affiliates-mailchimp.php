@@ -196,7 +196,7 @@ class Affiliates_MailChimp {
 
 		$output .= '</select>';
 		$output .= '<p class="description">';
-		$output .= esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' );
+		$output .= esc_html__( 'Whether a double opt-in confirmation message is sent.' , 'affiliates-mailchimp' );
 		$output .= '</p>';
 		$output .= '</tr>';
 
@@ -241,7 +241,7 @@ class Affiliates_MailChimp {
 		$output_sync .= '</th>';
 		$output_sync .= '<td>';
 		$output_sync .= '<p class="description">';
-		$output_sync .= esc_html__( 'Click this button to add existing affiliates in your mailchimp list.', 'affiliates-mailchimp' );
+		$output_sync .= esc_html__( 'Click this button to add existing affiliates in your MailChimp list.', 'affiliates-mailchimp' );
 		$output_sync .= '</p>';
 		$output_sync .= '</td>';
 		$output_sync .= '</tr>';
