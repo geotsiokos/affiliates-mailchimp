@@ -309,7 +309,7 @@ class Affiliates_MailChimp {
 			)
 		);
 		$output_sync .= ' ';
-		$output_sync .= '<ul>';
+		$output_sync .= '<ol>';
 		$output_sync .= '<li>';
 		$output_sync .= wp_kses(
 			sprintf(
@@ -325,13 +325,13 @@ class Affiliates_MailChimp {
 		$output_sync .= '</li>';
 		$output_sync .= '<li>';
 		$output_sync .= wp_kses(
-			__( 'Use the file obtained to import the affiliates from your MailChimp account under <strong>Lists > Add contacts > Import contacts</strong>', 'affiliates-mailchimp' ),
+			__( 'Use the file obtained to import the affiliates from your MailChimp account under <strong>Lists > Add contacts > Import contacts</strong>.', 'affiliates-mailchimp' ),
 			array(
 				'strong' => array()
 			)
 		);
 		$output_sync .= '</li>';
-		$output_sync .= '</ul>';
+		$output_sync .= '</ol>';
 		$output_sync .= '</p>';
 
 		// @codingStandardsIgnoreStart
