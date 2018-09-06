@@ -261,6 +261,7 @@ class Affiliates_MC {
 	public static function synchronize() {
 		$affiliates = affiliates_get_affiliates();
 		if ( count( $affiliates ) > 0 ) {
+			error_log( 'Affiliates MailChimp will try to add ' . count( $affiliates ) . ' affiliates.' );
 			foreach ( $affiliates as $affiliate ) {
 				if ( $affiliate['affiliate_id'] != 1 ) {
 					$user_data = array(
@@ -268,6 +269,7 @@ class Affiliates_MC {
 						'first_name' => $affiliate['name'],
 						'last_name'  => $affiliate['name']
 					);
+					error_log( 'Affiliates MailChimp is adding affiliate with ID ' . esc_attr( $affiliate['affiliate_id'] ) );
 					self::manage_subscriber( $affiliate['affiliate_id'], $user_data );
 				}
 			}

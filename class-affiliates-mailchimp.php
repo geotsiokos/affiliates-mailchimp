@@ -238,6 +238,13 @@ class Affiliates_MailChimp {
 		$output_sync .= esc_html__( 'Synchronize', 'affiliates-mailchimp' );
 		$output_sync .= '</h2>';
 
+		$output_sync .= '<p>';
+		$output_sync .= esc_html__( 'You can add existing affiliates here by clicking the button.', 'affiliates-mailchimp' );
+		$output_sync .= ' ';
+		$output_sync .= esc_html__( 'This process can be slow and result in timeouts if you have many affiliates.', 'affiliates-mailchimp' );
+		$output_sync .= ' ';
+		$output_sync .= '</p>';
+
 		$output_sync .= '<form method="POST" action="">';
 
 		$output_sync .= wp_nonce_field( 'synchronize', 'aff-mailchimp-nonce', true, false );
@@ -286,6 +293,46 @@ class Affiliates_MailChimp {
 			$output_sync .= '});'; // ready
 		$output_sync .= '}';
 		$output_sync .= '</script>';
+
+		$output_sync .= '<h3>';
+		$output_sync .= esc_html__( 'Synchronizing many Affiliates', 'affiliates-mailchimp' );
+		$output_sync .= '</h3>';
+		$output_sync .= '<p>';
+		$output_sync .= wp_kses(
+			sprintf(
+				__( 'To add a large number of affiliates to a list, we recommend to use the Export features available with <a href="%s">Affiliates Pro</a> and <a href="%s">Affiliates Enterprise</a> instead.', 'affiliates-mailchimp' ),
+				esc_attr( 'https://www.itthinx.com/shop/affiliates-pro/' ),
+				esc_attr( 'https://www.itthinx.com/shop/affiliates-enterprise/' )
+			),
+			array(
+				'a' => array( 'href' => array() )
+			)
+		);
+		$output_sync .= ' ';
+		$output_sync .= '<ul>';
+		$output_sync .= '<li>';
+		$output_sync .= wp_kses(
+			sprintf(
+				__( '<strong>Export</strong> your affiliates as described <a href="%s">here</a> for Affiliates Pro or <a href="%s">here</a> for Affiliates Enterprise.', 'affiliates-mailchimp' ),
+				esc_attr( 'http://docs.itthinx.com/document/affiliates-pro/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' ),
+				esc_attr( 'http://docs.itthinx.com/document/affiliates-enterprise/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' )
+			),
+			array(
+				'a' => array( 'href' => array() ),
+				'strong' => array()
+			)
+		);
+		$output_sync .= '</li>';
+		$output_sync .= '<li>';
+		$output_sync .= wp_kses(
+			__( 'Use the file obtained to import the affiliates from your MailChimp account under <strong>Lists > Add contacts > Import contacts</strong>', 'affiliates-mailchimp' ),
+			array(
+				'strong' => array()
+			)
+		);
+		$output_sync .= '</li>';
+		$output_sync .= '</ul>';
+		$output_sync .= '</p>';
 
 		// @codingStandardsIgnoreStart
 		echo $output_sync;
