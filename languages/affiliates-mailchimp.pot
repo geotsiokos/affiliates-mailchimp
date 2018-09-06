@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid   ""
+msgstr  "Project-Id-Version: PACKAGE VERSION\n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2018-09-06 19:24+0200\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+        "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
+        "MIME-Version: 1.0\n"
+        "Content-Type: text/plain; charset=CHARSET\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+#: class-affiliates-mailchimp.php:52
+msgid   "<strong>Affiliates Mailchimp</strong> plugin requires <a href="
+        "\"http://www.itthinx.com/plugins/affiliates-pro\" target=\"_blank"
+        "\">Affiliates Pro</a> or <a href=\"http://www.itthinx.com/plugins/"
+        "affiliates-enterprise\" target=\"_blank\">Affiliates Enterprise</a>."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:151
+msgid   "API Key:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:104
+msgid   "Access denied."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:271
+msgid   "Add all affiliates to the indicated list?"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:139
+msgid   "Affiliates MailChimp"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:135
+msgid   "Affiliates Mailchimp needs a valid API key to connect with MailChimp "
+        "servers."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:216
+msgid   "CAUTION: If this option is enabled while the plugin is deactivated, "
+        "the above settings will be DELETED. If you want to keep these "
+        "settings and are going to deactivate it, make sure to keep a note or "
+        "backup or do not enable this option."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:253
+msgid   "Click this button to add existing affiliates to the indicated "
+        "MailChimp list."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:190
+msgid   "Confirm Subscription:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:211
+msgid   "Delete Settings:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:172
+msgid   "Interest Category:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:181
+msgid   "Interest:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:163
+msgid   "List name:"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:88 class-affiliates-mailchimp.php:89
+msgid   "MailChimp"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:200
+msgid   "NO"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:279
+msgid   "Please input the name of the list to which the affiliates should be "
+        "added."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:282
+msgid   "Please save your changes first."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:225
+msgid   "Save"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:144
+msgid   "Settings"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:238 class-affiliates-mailchimp.php:249
+msgid   "Synchronize"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:205
+msgid   "Whether a double opt-in confirmation message is sent."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:196
+msgid   "YES"
+msgstr  ""
