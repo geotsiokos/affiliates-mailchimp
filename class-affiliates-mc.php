@@ -26,7 +26,7 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Affiliates Mailchimp class
  */
-class Affiliates_Mc {
+class Affiliates_MC {
 
 	/**
 	 * Initialize the Class
@@ -332,4 +332,6 @@ class Affiliates_Mc {
 		}
 		return $result;
 	}
-} Affiliates_Mc::init();
+}
+
+Affiliates_MC::init();
