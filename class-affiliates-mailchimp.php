@@ -237,7 +237,7 @@ class Affiliates_MailChimp {
 
 		$output_sync .= '<tr>';
 		$output_sync .= '<th scope="row">';
-		$output_sync .= '<input class="button" type="submit" name="submit" value="' . esc_attr__( 'Syncronize', 'affiliates-mailchimp' ) . '">';
+		$output_sync .= '<input class="button" type="submit" name="submit" value="' . esc_attr__( 'Synchronize', 'affiliates-mailchimp' ) . '">';
 		$output_sync .= '</th>';
 		$output_sync .= '<td>';
 		$output_sync .= '<p class="description">';
