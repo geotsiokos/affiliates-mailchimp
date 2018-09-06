@@ -107,11 +107,11 @@ class Affiliates_MailChimp {
 
 		if ( isset( $_POST['submit'] ) ) {
 			if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
-				$options['api_key']            = $_POST['api_key'];
-				$options['list_name']          = $_POST['list_name'];
-				$options['interests_category'] = $_POST['interests_category'];
-				$options['interest']           = $_POST['interest'];
-				$options['need_confirm']       = $_POST['need_confirm'];
+				$options['api_key']            = isset( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
+				$options['list_name']          = isset( $_POST['list_name'] ) ? sanitize_text_field( $_POST['list_name'] ) : '';
+				$options['interests_category'] = isset( $_POST['interests_category'] ) ? sanitize_text_field( $_POST['interests_category'] ) : '';
+				$options['interest']           = isset( $_POST['interest'] ) ? sanitize_text_field( $_POST['interest'] ) : '';
+				$options['need_confirm']       = isset( $_POST['need_confirm'] ) ? 1 : 0;
 				$options['delete_settings']    = isset( $_POST['delete_settings'] ) ? 1 : 0;
 			}
 			update_option( 'affiliates-mailchimp', $options );
@@ -130,7 +130,7 @@ class Affiliates_MailChimp {
 
 		$description = '';
 		if ( !$api_key ) {
-			$description = esc_html__( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
+			$description = __( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
 		}
 
 		$output .= '<div class="wrap">';

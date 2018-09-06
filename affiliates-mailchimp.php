@@ -25,7 +25,7 @@
  * Author URI: http://www.itthinx.com/
  * Donate-Link: http://www.itthinx.com/shop/affiliates-enterprise/
  * License: GPLv3
- * Version: 3.0.0
+ * Version: 3.0.1
  */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -36,12 +36,12 @@ define( 'AFFILIATES_MAILCHIMP_PLUGIN_DOMAIN', 'affiliates-mailchimp' );
 define( 'AFFILIATES_MAILCHIMP_FILE', __FILE__ );
 define( 'AFFILIATES_MAILCHIMP_CORE_DIR', WP_PLUGIN_DIR . '/affiliates-mailchimp' );
 
-register_deactivation_hook( __FILE__, 'deactivate' );
+register_deactivation_hook( __FILE__, 'affiliates_mailchimp_deactivate' );
 
 /**
  * Option to delete plugin setting upon deactivation
  */
-function deactivate() {
+function affiliates_mailchimp_deactivate() {
 	$options = get_option( 'affiliates-mailchimp' );
 	if ( isset( $options['delete_settings'] ) && $options['delete_settings'] == 1 ) {
 		delete_option( 'affiliates-mailchimp' );

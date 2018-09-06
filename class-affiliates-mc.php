@@ -104,7 +104,7 @@ class Affiliates_Mc {
 			$interest           = $options['interest'];
 			$need_confirm       = $options['need_confirm'];
 
-			$api = new Mailchimp_Api( $mailchimp_options['api_key'] );
+			$api = new Mailchimp_Api( $options['api_key'] );
 			$data = array(
 				'fields' => 'lists.name,lists.id',
 				'count'  => 'all'
@@ -215,13 +215,12 @@ class Affiliates_Mc {
 	 * @param array $user_info
 	 */
 	public static function delete_subscriber( $user_id, $user_info ) {
-		$options   = get_option( 'affiliates-mailchimp' );
+		$options = get_option( 'affiliates-mailchimp' );
 
 		if ( $options['api_key'] ) {
-			$options   = get_option( 'affiliates-mailchimp' );
 			$list_name = $options['list_name'];
 
-			$api = new Mailchimp_Api( $mailchimp_options['api_key'] );
+			$api = new Mailchimp_Api( $options['api_key'] );
 			$data = array(
 				'fields' => 'lists.name,lists.id',
 				'count' => 'all'
