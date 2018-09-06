@@ -1,7 +1,7 @@
 #!/bin/sh
 find . -iname "*.php" | \
  xargs xgettext \
- --language=PHP 
+ --language=PHP \
  --indent \
  --keyword=__ \
  --keyword=_e \
