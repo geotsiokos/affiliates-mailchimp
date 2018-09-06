@@ -1,0 +1,2 @@
+#!/bin/sh
+msgfmt -o affiliates-mailchimp-de_DE.mo affiliates-mailchimp-de_DE.po
