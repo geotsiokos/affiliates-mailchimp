@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2018-09-06 19:24+0200\n"
+        "POT-Creation-Date: 2018-09-06 20:05+0200\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,13 @@ msgid   "<strong>Affiliates Mailchimp</strong> plugin requires <a href="
         "affiliates-enterprise\" target=\"_blank\">Affiliates Enterprise</a>."
 msgstr  ""
 
+#: class-affiliates-mailchimp.php:316
+#, php-format
+msgid   "<strong>Export</strong> your affiliates as described <a href=\"%s"
+        "\">here</a> for Affiliates Pro or <a href=\"%s\">here</a> for "
+        "Affiliates Enterprise."
+msgstr  ""
+
 #: class-affiliates-mailchimp.php:151
 msgid   "API Key:"
 msgstr  ""
@@ -31,7 +38,7 @@ msgstr  ""
 msgid   "Access denied."
 msgstr  ""
 
-#: class-affiliates-mailchimp.php:271
+#: class-affiliates-mailchimp.php:278
 msgid   "Add all affiliates to the indicated list?"
 msgstr  ""
 
@@ -51,7 +58,7 @@ msgid   "CAUTION: If this option is enabled while the plugin is deactivated, "
         "backup or do not enable this option."
 msgstr  ""
 
-#: class-affiliates-mailchimp.php:253
+#: class-affiliates-mailchimp.php:260
 msgid   "Click this button to add existing affiliates to the indicated "
         "MailChimp list."
 msgstr  ""
@@ -84,12 +91,12 @@ msgstr  ""
 msgid   "NO"
 msgstr  ""
 
-#: class-affiliates-mailchimp.php:279
+#: class-affiliates-mailchimp.php:286
 msgid   "Please input the name of the list to which the affiliates should be "
         "added."
 msgstr  ""
 
-#: class-affiliates-mailchimp.php:282
+#: class-affiliates-mailchimp.php:289
 msgid   "Please save your changes first."
 msgstr  ""
 
@@ -101,8 +108,30 @@ msgstr  ""
 msgid   "Settings"
 msgstr  ""
 
-#: class-affiliates-mailchimp.php:238 class-affiliates-mailchimp.php:249
+#: class-affiliates-mailchimp.php:238 class-affiliates-mailchimp.php:256
 msgid   "Synchronize"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:298
+msgid   "Synchronizing many Affiliates"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:244
+msgid   "This process can be slow and result in timeouts if you have many "
+        "affiliates."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:303
+#, php-format
+msgid   "To add a large number of affiliates to a list, we recommend to use "
+        "the Export features available with <a href=\"%s\">Affiliates Pro</a> "
+        "and <a href=\"%s\">Affiliates Enterprise</a> instead."
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:328
+msgid   "Use the file obtained to import the affiliates from your MailChimp "
+        "account under <strong>Lists > Add contacts > Import contacts</"
+        "strong>."
 msgstr  ""
 
 #: class-affiliates-mailchimp.php:205
@@ -111,4 +140,8 @@ msgstr  ""
 
 #: class-affiliates-mailchimp.php:196
 msgid   "YES"
+msgstr  ""
+
+#: class-affiliates-mailchimp.php:242
+msgid   "You can add existing affiliates here by clicking the button."
 msgstr  ""
