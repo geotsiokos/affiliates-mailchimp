@@ -65,6 +65,8 @@ Please refer to the Documentation for further details:
 * Added the plugin version constant.
 * Updated the minimum PHP version required.
 * Fixed some descriptions in the settings.
+* Added a confirmation before attempting to synchronize and avoiding empty list name.
+* Added the translation template.
 
 = 3.0.0 =
 * Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
