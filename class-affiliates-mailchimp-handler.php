@@ -347,7 +347,7 @@ class Affiliates_Mailchimp_Handler {
 			$interest           = $options['interest'];
 			$need_confirm       = 0;//$options['need_confirm'];
 			// for testing
-			//$api_key = '5d54bfe9248831abe173828f55f5455e-us19';
+			
 			
 			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 			$data = array(
@@ -365,7 +365,7 @@ class Affiliates_Mailchimp_Handler {
 
 			$user_data = array(
 				'email_address' => 'george@itthinx.com',
-				'status'        => 'subscribed',
+				'status'        => 'subscribed'//,
 				/*'merge_fields'  => array(
 						'FNAME' => 'george',
 						'LNAME' => 'gitthinx'
