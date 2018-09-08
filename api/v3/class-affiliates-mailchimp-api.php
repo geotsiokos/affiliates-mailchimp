@@ -99,25 +99,26 @@ class Affiliates_Mailchimp_Api {
 	 * @return boolean
 	 */
 	private function request_url( $type, $params = array(), $list_params = array() ) {
+		$result = self::LISTS;
 		switch ( $type ) {
 			case 'get' :
-				$result = self::LISTS . '?' . http_build_query( $params );
+				$result .= '?' . http_build_query( $params );
 				break;
 			case 'update' :
 			case 'check' :
-				$result = self::LISTS . '/' . $list_params['list_id'] . self::MEMBERS . '/' . md5( $params['email_address'] );
+				$result .= '/' . $list_params['list_id'] . self::MEMBERS . '/' . md5( $params['email_address'] );
 				break;
 			case 'new' :
-				$result = self::LISTS . '/' . $list_params['list_id'] . self::MEMBERS;
+				$result .= '/' . $list_params['list_id'] . self::MEMBERS;
 				break;
 			case 'interest_categories' :
-				$result = self::LISTS . '/' . $list_params['list_id'] . self::INTEREST_CATEGORIES;
+				$result .= '/' . $list_params['list_id'] . self::INTEREST_CATEGORIES;
 				break;
 			case 'interests' :
-				$result = self::LISTS . '/' . $list_params['list_id'] . self::INTEREST_CATEGORIES . '/' . $list_params['interest_category_id'] . self::INTERESTS;
+				$result .= '/' . $list_params['list_id'] . self::INTEREST_CATEGORIES . '/' . $list_params['interest_category_id'] . self::INTERESTS;
 				break;
 			default :
-				$result = false;
+				$result = null;
 		}
 		return $result;
 	}
@@ -251,7 +252,7 @@ class Affiliates_Mailchimp_Api {
 	 */
 	private function make_request( $request, $parameters = array(), $api_path = null ) {
 		global $wp_version; //@todo check if this is really needed
-		$result = false;
+		$result = null;
 		$response = null;
 		
 		$args = array(
@@ -266,6 +267,7 @@ class Affiliates_Mailchimp_Api {
 			), // @todo remove array(),
 			'cookies'     => array(),
 			'body'        => null,
+			'method'      => null,
 			'compress'    => false,
 			'decompress'  => true,
 			'sslverify'   => true, // @todo remove true,
@@ -282,42 +284,51 @@ class Affiliates_Mailchimp_Api {
 			case 'lists' :
 			case 'check' :
 				$response = wp_remote_get( $url, $args );
+				//self::write_log( 'lists check' );
 				
 				//$ch = curl_init();
 				//curl_setopt( $ch, CURLOPT_URL, $url );
 				//curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
 				break;
 			case 'add' :
-				$ch = curl_init( $url );
-				curl_setopt( $ch, CURLOPT_USERPWD, 'user:' . $this->apikey );
-				curl_setopt( $ch, CURLOPT_TIMEOUT, 10 );
-				curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
+				//$args['method'] = 'PUT';
+				self::write_log( $url );
+				$args['body'] = json_encode( $parameters );self::write_log( $parameters);
+				$response = wp_remote_request( $url, $args );
+				self::write_log( $args );
+				//$ch = curl_init( $url );
+				//curl_setopt( $ch, CURLOPT_USERPWD, 'user:' . $this->apikey );
+				//curl_setopt( $ch, CURLOPT_TIMEOUT, 10 );
+				//curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
 				break;
-			case 'update' :
-				$ch = curl_init( $url );
-				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PATCH' );
-				curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
-				break;
+			//case 'update' :
+			//	$ch = curl_init( $url );
+			//	curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PATCH' );
+			//	curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
+			//	break;
 		}
 
+		
+
+		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+			$error_message = wp_remote_retrieve_response_message( $response );
+			self::write_log( 'Something went wrong with the request: ' );
+			self::write_log( wp_remote_retrieve_response_code( $response ) );
+		} else {
+			$result = json_decode( wp_remote_retrieve_body( $response ), true );
+			self::write_log( $result );
+		}
+		
 		//curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 		//curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		//curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-
+		
 		//$result     = curl_exec( $ch );
 		//$httpd_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		//curl_close( $ch );
 		//if ( $httpd_code == '200' ) {
 		//	$result = json_decode( $result, true );
 		//}
-		self::write_log( $response );
-		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			$error_message = $response->get_error_message();
-			self::write_log( 'Something went wrong with the request: ' );
-			self::write_log( $error_message );
-		} else {
-			$result = json_decode( wp_remote_retrieve_body( $response ), true );
-		}
 
 		return $result;
 	}
