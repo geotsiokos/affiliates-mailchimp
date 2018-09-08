@@ -25,7 +25,7 @@
  * Author URI: http://www.itthinx.com/
  * Donate-Link: http://www.itthinx.com/shop/affiliates-enterprise/
  * License: GPLv3
- * Version: 3.0.1
+ * Version: 3.1.0
  */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -49,4 +49,4 @@ function affiliates_mailchimp_deactivate() {
 }
 
 require_once 'class-affiliates-mailchimp.php';
-require_once 'class-affiliates-mc.php';
+require_once 'class-affiliates-mailchimp-handler.php';
