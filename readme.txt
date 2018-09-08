@@ -5,7 +5,7 @@ Tags: affiliate, affiliates, referral, growth marketing, MailChimp
 Requires at least: 4.0.0
 Tested up to: 4.9.8
 Requires PHP: 5.5.0
-Stable tag: 3.0.1
+Stable tag: 3.1.0
 License: GPLv3
 
 Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [MailChimp](https://mailchimp.com).
@@ -57,6 +57,9 @@ Please refer to the Documentation for further details:
 - [Integration with Affiliates Enterprise](http://docs.itthinx.com/document/affiliates-enterprise/setup/settings/integrations/)
 
 == Changelog ==
+
+= 3.1.0
+* Renamed classes according to plugin name
 
 = 3.0.1 =
 * Improved code formating
