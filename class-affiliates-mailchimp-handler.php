@@ -364,7 +364,7 @@ class Affiliates_Mailchimp_Handler {
 			//self::write_log( $list_id );
 
 			$user_data = array(
-				'email_address' => 'george@itthinx.com',
+				'email_address' => 'example@mail.com',
 				'status'        => 'subscribed'//,
 				/*'merge_fields'  => array(
 						'FNAME' => 'george',
@@ -426,7 +426,7 @@ class Affiliates_Mailchimp_Handler {
 				$interest_id = '22f089e85d'; //self::get_id( 'interests', $interests, $interest );
 			}
 			$user_data = array(
-				'email_address' => 'george@itthinx.com',
+				'email_address' => 'example@mail.com',
 				'status'        => 'subscribed',
 				/*'merge_fields'  => array(
 						'FNAME' => 'george',
