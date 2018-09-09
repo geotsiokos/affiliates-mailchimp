@@ -291,11 +291,27 @@ class Affiliates_Mailchimp_Api {
 				//curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
 				break;
 			case 'add' :
-				//$args['method'] = 'PUT';
-				self::write_log( $url );
-				$args['body'] = json_encode( $parameters );self::write_log( $parameters);
-				$response = wp_remote_request( $url, $args );
-				self::write_log( $args );
+				//$args['method'] = 'POST';
+				
+				//self::write_log( $parameters );
+				//$args['body'] = $parameters;
+				//self::write_log( 'PARAMETERS' );
+				//self::write_log( $args);
+				
+				$arguments = array(
+					'headers'     => array(
+						'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->apikey )
+					),
+					'body' => json_encode(
+						array(
+							'email_address' => 'example@mail.com',
+							'status'        => 'subscribed'
+						) 
+					),
+					'method' => 'POST'
+				);
+				$response = wp_remote_post( $url, $arguments );
+				//self::write_log( $args );
 				//$ch = curl_init( $url );
 				//curl_setopt( $ch, CURLOPT_USERPWD, 'user:' . $this->apikey );
 				//curl_setopt( $ch, CURLOPT_TIMEOUT, 10 );
@@ -312,13 +328,13 @@ class Affiliates_Mailchimp_Api {
 
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 			$error_message = wp_remote_retrieve_response_message( $response );
-			self::write_log( 'Something went wrong with the request: ' );
-			self::write_log( wp_remote_retrieve_response_code( $response ) );
+			//self::write_log( 'Something went wrong with the request: ' );
+			//self::write_log( wp_remote_retrieve_response_code( $response ) );
 		} else {
 			$result = json_decode( wp_remote_retrieve_body( $response ), true );
 			self::write_log( $result );
 		}
-		
+		self::write_log(wp_remote_retrieve_response_code( $response ));
 		//curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 		//curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		//curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
