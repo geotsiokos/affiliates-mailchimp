@@ -1,6 +1,6 @@
 <?php
 /**
- * class-mailchimp-api.php
+ * class-affiliates-mailchimp-api.php
  *
  * Copyright (c) 2018 www.itthinx.com
  *
@@ -61,10 +61,6 @@ class Affiliates_Mailchimp_Api {
 	 * @param array $opts
 	 */
 	public function __construct( $apikey = null, $opts = array() ) {
-		// @todo this will be removed 
-		if ( !function_exists( 'curl_init' ) || !function_exists( 'curl_setopt' ) ) {
-			exit;
-		}
 		if ( !function_exists( 'wp_remote_get' ) ) {
 			require_once 'wp-includes/http.php';
 		}
@@ -102,10 +98,11 @@ class Affiliates_Mailchimp_Api {
 		$result = self::LISTS;
 		switch ( $type ) {
 			case 'get' :
-				$result .= '?' . http_build_query( $params );
+				$result .= isset( $params ) ? '?' . http_build_query( $params ) : '';
 				break;
 			case 'update' :
 			case 'check' :
+			case 'delete' :
 				$result .= '/' . $list_params['list_id'] . self::MEMBERS . '/' . md5( $params['email_address'] );
 				break;
 			case 'new' :
@@ -128,7 +125,7 @@ class Affiliates_Mailchimp_Api {
 	 *
 	 * @param array $list_parameters for the URL
 	 * @param array $parameters for the request
-	 * @return boolean|mixed
+	 * @return NULL|array
 	 */
 	public function get_lists( $list_parameters = array(), $parameters = array() ) {
 		$result = null;
@@ -203,11 +200,29 @@ class Affiliates_Mailchimp_Api {
 	}
 
 	/**
+	 * Delete an existing email
+	 *
+	 * @param array $list_parameters
+	 * @param array $parameters
+	 * @return NULL|bool|mixed
+	 */
+	public function delete_subscriber( $list_parameters = array(), $parameters = array() ) {
+		$result = null;
+		if ( isset( $list_parameters['list_id'] ) && isset( $parameters['email_address'] ) ) {
+			$delete_member_url = $this->request_url( 'delete', $parameters, $list_parameters );
+			if ( $delete_member_url ) {
+				$result = $this->make_request( 'delete', $parameters, $delete_member_url );
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Add a new Interest Category
 	 *
 	 * @param array $list_parameters
 	 * @param array $parameters
-	 * @return NULL|boolean|mixed
+	 * @return NULL|mixed
 	 */
 	public function add_interest_category( $list_parameters = array(), $parameters = array() ) {
 		$result = null;
@@ -251,115 +266,47 @@ class Affiliates_Mailchimp_Api {
 	 * @return boolean|mixed
 	 */
 	private function make_request( $request, $parameters = array(), $api_path = null ) {
-		global $wp_version; //@todo check if this is really needed
 		$result = null;
 		$response = null;
-		
+
+		$url  = $this->root . $api_path;
 		$args = array(
 			'timeout'     => 10,
 			'redirection' => 5,
 			'httpversion' => '1.1',
-			//'user-agent'  => 'WordPress/' . $wp_version . '; ' . home_url(),
 			'blocking'    => true,
 			'headers'     => array(
-				'Content-Type' => 'application/json',
+				'Content-Type'  => 'application/json',
 				'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->apikey )
-			), // @todo remove array(),
-			'cookies'     => array(),
-			'body'        => null,
-			'method'      => null,
-			'compress'    => false,
-			'decompress'  => true,
-			'sslverify'   => true, // @todo remove true,
-			'stream'      => false,
-			'filename'    => null
+			),
+			'sslverify'   => false,
 		); 
-		$url = $this->root . $api_path;
-		//$headers = array(
-		//	'Content-Type: application/json',
-		//	'Authorization: Basic ' . base64_encode( 'user:' . $this->apikey )
-		//);
 
 		switch ( $request ) {
 			case 'lists' :
 			case 'check' :
 				$response = wp_remote_get( $url, $args );
-				//self::write_log( 'lists check' );
-				
-				//$ch = curl_init();
-				//curl_setopt( $ch, CURLOPT_URL, $url );
-				//curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
 				break;
 			case 'add' :
-				//$args['method'] = 'POST';
-				
-				//self::write_log( $parameters );
-				//$args['body'] = $parameters;
-				//self::write_log( 'PARAMETERS' );
-				//self::write_log( $args);
-				
-				$arguments = array(
-					'headers'     => array(
-						'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->apikey )
-					),
-					'body' => json_encode(
-						array(
-							'email_address' => 'example@mail.com',
-							'status'        => 'subscribed'
-						) 
-					),
-					'method' => 'POST'
-				);
-				$response = wp_remote_post( $url, $arguments );
-				//self::write_log( $args );
-				//$ch = curl_init( $url );
-				//curl_setopt( $ch, CURLOPT_USERPWD, 'user:' . $this->apikey );
-				//curl_setopt( $ch, CURLOPT_TIMEOUT, 10 );
-				//curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
+				$args['body'] = json_encode( $parameters );
+				$args['method'] = 'POST';
+				$response = wp_remote_request( $url, $args );
 				break;
-			//case 'update' :
-			//	$ch = curl_init( $url );
-			//	curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PATCH' );
-			//	curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
-			//	break;
+			case 'update' :
+				$args['body'] = json_encode( $parameters );
+				$args['method'] = 'PATCH';
+				$response = wp_remote_request( $url, $args );
+			case 'delete' :
+				$args['method'] = 'DELETE';
+				$response = wp_remote_post( $url, $args );
 		}
-
-		
 
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			$error_message = wp_remote_retrieve_response_message( $response );
-			//self::write_log( 'Something went wrong with the request: ' );
-			//self::write_log( wp_remote_retrieve_response_code( $response ) );
+			error_log( wp_remote_retrieve_response_message( $response ) );
 		} else {
 			$result = json_decode( wp_remote_retrieve_body( $response ), true );
-			self::write_log( $result );
 		}
-		self::write_log(wp_remote_retrieve_response_code( $response ));
-		//curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-		//curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		//curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-		
-		//$result     = curl_exec( $ch );
-		//$httpd_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
-		//curl_close( $ch );
-		//if ( $httpd_code == '200' ) {
-		//	$result = json_decode( $result, true );
-		//}
 
 		return $result;
-	}
-
-	/**
-	 * Helper for debugging
-	 * writes to debug.log
-	 * 
-	 * @param mixed $log
-	 */
-	private static function write_log ( $log )  {
-		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
-		} else {
-			error_log( $log );
-		}
 	}
 }
