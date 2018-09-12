@@ -421,17 +421,4 @@ class Affiliates_Mailchimp_Handler {
 		}
 		return $options;
 	}
-
-	/**
-	 * Helper function for debugging
-	 *
-	 * @param mixed $log parameter to log
-	 */
-	private static function write_log ( $log )  {
-		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
-		} else {
-			error_log( $log );
-		}
-	}
 } Affiliates_Mailchimp_Handler::init();
