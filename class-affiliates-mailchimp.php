@@ -22,7 +22,7 @@
 if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// @todo add a newsletter option in sign-up
 /**
  * Class Affiliates MailChimp
  */
@@ -78,7 +78,7 @@ class Affiliates_MailChimp {
 			}
 		}
 	}
-
+	
 	/**
 	 * Adds the admin section.
 	 */
@@ -103,21 +103,28 @@ class Affiliates_MailChimp {
 		if ( !current_user_can( AFFILIATES_ADMINISTER_OPTIONS ) ) {
 			wp_die( esc_html__( 'Access denied.', 'affiliates-mailchimp' ) );
 		}
+		if ( !class_exists( 'Affiliates_Mailchimp_Handler' ) ) {
+			require_once 'class-affiliates-mailchimp-handler.php';
+		}
 		$options = get_option( 'affiliates-mailchimp' );
 
 		if ( isset( $_POST['submit'] ) ) {
 			if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'aff-mc-set-admin-options' ) ) {
-				$options['api_key']            = isset( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
-				$options['list_name']          = isset( $_POST['list_name'] ) ? sanitize_text_field( $_POST['list_name'] ) : '';
-				$options['interests_category'] = isset( $_POST['interests_category'] ) ? sanitize_text_field( $_POST['interests_category'] ) : '';
-				$options['interest']           = isset( $_POST['interest'] ) ? sanitize_text_field( $_POST['interest'] ) : '';
-				$options['need_confirm']       = isset( $_POST['need_confirm'] ) ? 1 : 0;
-				$options['delete_settings']    = isset( $_POST['delete_settings'] ) ? 1 : 0;
+				$options['api_key']            = isset( $_POST['api_key'] ) ? trim( sanitize_text_field( $_POST['api_key'] ) ) : '';
+				$options['list_name']          = isset( $_POST['list_name'] ) ? trim( sanitize_text_field( $_POST['list_name'] ) ) : '';
+				$options['interests_category'] = isset( $_POST['interests_category'] ) ? trim( sanitize_text_field( $_POST['interests_category'] ) ) : '';
+				$options['interest']           = isset( $_POST['interest'] ) ? trim( sanitize_text_field( $_POST['interest'] ) ) : '';
+				$options['need_confirm']       = !empty( $_POST['need_confirm'] ) ? 1 : 0;
+				$options['delete_settings']    = !empty( $_POST['delete_settings'] ) ? 1 : 0;
+				$options_ids = Affiliates_Mailchimp_Handler::set_ids( $options['list_name'] );
 			}
-			update_option( 'affiliates-mailchimp', $options );
+			update_option( 'affiliates-mailchimp', array_merge($options, $options_ids ) );
+			
 		} else {
 			if ( isset( $_POST['generate'] ) ) {
-				Affiliates_Mc::synchronize();
+				if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'synchronize' ) ) {
+					Affiliates_Mailchimp_Handler::synchronize();
+				}
 			}
 		}
 
@@ -133,9 +140,13 @@ class Affiliates_MailChimp {
 			$description = __( 'Affiliates Mailchimp needs a valid API key to connect with MailChimp servers.', 'affiliates-mailchimp' );
 		}
 
+		$output .= '<h1>';
+		$output .= esc_html__( 'Affiliates MailChimp', 'affiliates-mailchimp' );
+		$output .= '</h1>';
+
 		$output .= '<div class="wrap">';
 		$output .= '<h2>';
-		$output .= esc_html__( 'Affiliates MailChimp', 'affiliates-mailchimp' );
+		$output .= esc_html__( 'Settings', 'affiliates-mailchimp' );
 		$output .= '</h2>';
 		$output .= '<form method="post" name="options" action="">';
 		$output .= '<table class="form-table">';
@@ -145,7 +156,7 @@ class Affiliates_MailChimp {
 		$output .= esc_html__( 'API Key:', 'affiliates-mailchimp' );
 		$output .= '</th>';
 		$output .= '<td>';
-		$output .= '<input type="text" name="api_key" value="' . esc_attr( $api_key ) . '" />';
+		$output .= '<input type="text" name="api_key" class="widefat" value="' . esc_attr( $api_key ) . '" />';
 		$output .= '<p class="description">';
 		$output .= esc_html( $description );
 		$output .= '</p>';
@@ -157,7 +168,7 @@ class Affiliates_MailChimp {
 		$output .= esc_html__( 'List name:', 'affiliates-mailchimp' );
 		$output .= '</th>';
 		$output .= '<td>';
-		$output .= '<input type="text" name="list_name" value="' . esc_attr( $list_name ) . '" />';
+		$output .= '<input id="mailchimp-list-name" type="text" name="list_name" class="widefat"  value="' . esc_attr( $list_name ) . '" />';
 		$output .= '</td>';
 		$output .= '</tr>';
 
@@ -166,7 +177,7 @@ class Affiliates_MailChimp {
 		$output .= esc_html__( 'Interest Category:', 'affiliates-mailchimp' );
 		$output .= '</th>';
 		$output .= '<td>';
-		$output .= '<input type="text" name="interests_category" value="' . esc_attr( $interests_category ) . '" />';
+		$output .= '<input type="text" name="interests_category" class="widefat" value="' . esc_attr( $interests_category ) . '" />';
 		$output .= '</td>';
 		$output .= '</tr>';
 
@@ -175,7 +186,7 @@ class Affiliates_MailChimp {
 		$output .= esc_html__( 'Interest:', 'affiliates-mailchimp' );
 		$output .= '</th>';
 		$output .= '<td>';
-		$output .= '<input type="text" name="interest" value="' . esc_attr( $interest ) . '" />';
+		$output .= '<input type="text" name="interest" class="widefat"  value="' . esc_attr( $interest ) . '" />';
 		$output .= '</td>';
 		$output .= '</tr>';
 
@@ -196,7 +207,7 @@ class Affiliates_MailChimp {
 
 		$output .= '</select>';
 		$output .= '<p class="description">';
-		$output .= esc_html__( 'Control whether a double opt-in confirmation message is sent. Abusing this may cause your mailchimp account to be suspended.' , 'affiliates-mailchimp' );
+		$output .= esc_html__( 'Whether a double opt-in confirmation message is sent.' , 'affiliates-mailchimp' );
 		$output .= '</p>';
 		$output .= '</tr>';
 
@@ -228,20 +239,30 @@ class Affiliates_MailChimp {
 		// @codingStandardsIgnoreEnd
 
 		$output_sync .= '<div class="wrap">';
-		$output_sync .= '<h3>';
+		$output_sync .= '<h2>';
 		$output_sync .= esc_html__( 'Synchronize', 'affiliates-mailchimp' );
-		$output_sync .= '</h3>';
+		$output_sync .= '</h2>';
+
+		$output_sync .= '<p>';
+		$output_sync .= esc_html__( 'You can add existing affiliates here by clicking the button.', 'affiliates-mailchimp' );
+		$output_sync .= ' ';
+		$output_sync .= esc_html__( 'This process can be slow and result in timeouts if you have many affiliates.', 'affiliates-mailchimp' );
+		$output_sync .= ' ';
+		$output_sync .= '</p>';
 
 		$output_sync .= '<form method="POST" action="">';
+
+		$output_sync .= wp_nonce_field( 'synchronize', 'aff-mailchimp-nonce', true, false );
+
 		$output_sync .= '<table class="form-table">';
 
 		$output_sync .= '<tr>';
 		$output_sync .= '<th scope="row">';
-		$output_sync .= '<input class="button" type="submit" name="submit" value="' . esc_attr__( 'Syncronize', 'affiliates-mailchimp' ) . '">';
+		$output_sync .= '<input id="synchronize-mailchimp-list" class="button" type="submit" name="generate" value="' . esc_attr__( 'Synchronize', 'affiliates-mailchimp' ) . '">';
 		$output_sync .= '</th>';
 		$output_sync .= '<td>';
 		$output_sync .= '<p class="description">';
-		$output_sync .= esc_html__( 'Click this button to add existing affiliates in your mailchimp list.', 'affiliates-mailchimp' );
+		$output_sync .= esc_html__( 'Click this button to add existing affiliates to the indicated MailChimp list.', 'affiliates-mailchimp' );
 		$output_sync .= '</p>';
 		$output_sync .= '</td>';
 		$output_sync .= '</tr>';
@@ -249,6 +270,74 @@ class Affiliates_MailChimp {
 		$output_sync .= '</table>';
 		$output_sync .= '</form>';
 		$output_sync .= '</div>';
+
+		$output_sync .= '<script type="text/javascript">';
+		$output_sync .= 'if ( typeof jQuery !== "undefined" ) {';
+		$output_sync .= 'jQuery(document).ready(function(){';
+		$output_sync .= 'jQuery("#synchronize-mailchimp-list").click(function(e){';
+		$output_sync .= 'e.stopPropagation();';
+		$output_sync .= 'var mc_list_name = jQuery("input#mailchimp-list-name").val().trim();';
+		$output_sync .= sprintf( 'if ( mc_list_name.length > 0 && mc_list_name === "%s" ) {', esc_attr( $list_name ) );
+		$output_sync .= sprintf(
+			'if ( confirm("%s") ) {',
+			esc_html__( 'Add all affiliates to the indicated list?', 'affiliates-mailchimp' )
+		);
+		$output_sync .= '} else {'; // if confirm
+		$output_sync .= 'e.preventDefault();'; // stop form submission
+		$output_sync .= '}';
+		$output_sync .= '} else {'; // list is empty or not saved
+		$output_sync .= 'e.preventDefault();'; // stop form submission
+		$output_sync .= 'if ( mc_list_name.length === 0 ) {';
+		$output_sync .= sprintf( 'alert("%s");', esc_attr__( 'Please input the name of the list to which the affiliates should be added.', 'affiliates-mailchimp' ) );
+		$output_sync .= '}';
+		$output_sync .= sprintf( 'if ( mc_list_name !== "%s" ) {', esc_attr( $list_name ) );
+		$output_sync .= sprintf( 'alert("%s");', esc_attr__( 'Please save your changes first.', 'affiliates-mailchimp' ) );
+		$output_sync .= '}';
+		$output_sync .= '}';
+		$output_sync .= '});'; // #synchronize-mailchimp-list click
+		$output_sync .= '});'; // ready
+		$output_sync .= '}';
+		$output_sync .= '</script>';
+
+		$output_sync .= '<h3>';
+		$output_sync .= esc_html__( 'Synchronizing many Affiliates', 'affiliates-mailchimp' );
+		$output_sync .= '</h3>';
+		$output_sync .= '<p>';
+		$output_sync .= wp_kses(
+			sprintf(
+				__( 'To add a large number of affiliates to a list, we recommend to use the Export features available with <a href="%s">Affiliates Pro</a> and <a href="%s">Affiliates Enterprise</a> instead.', 'affiliates-mailchimp' ),
+				esc_attr( 'https://www.itthinx.com/shop/affiliates-pro/' ),
+				esc_attr( 'https://www.itthinx.com/shop/affiliates-enterprise/' )
+			),
+			array(
+				'a' => array( 'href' => array() )
+			)
+		);
+		$output_sync .= ' ';
+		$output_sync .= '<ol>';
+		$output_sync .= '<li>';
+		$output_sync .= wp_kses(
+			sprintf(
+				__( '<strong>Export</strong> your affiliates as described <a href="%s">here</a> for Affiliates Pro or <a href="%s">here</a> for Affiliates Enterprise.', 'affiliates-mailchimp' ),
+				esc_attr( 'http://docs.itthinx.com/document/affiliates-pro/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' ),
+				esc_attr( 'http://docs.itthinx.com/document/affiliates-enterprise/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' )
+			),
+			array(
+				'a' => array( 'href' => array() ),
+				'strong' => array()
+			)
+		);
+		$output_sync .= '</li>';
+		$output_sync .= '<li>';
+		$output_sync .= wp_kses(
+			__( 'Use the file obtained to import the affiliates from your MailChimp account under <strong>Lists > Add contacts > Import contacts</strong>.', 'affiliates-mailchimp' ),
+			array(
+				'strong' => array()
+			)
+		);
+		$output_sync .= '</li>';
+		$output_sync .= '</ol>';
+		$output_sync .= '</p>';
 
 		// @codingStandardsIgnoreStart
 		echo $output_sync;
