@@ -24,9 +24,9 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 // @todo add a newsletter option in sign-up
 /**
- * Class Affiliates MailChimp
+ * Class Affiliates Mailchimp
  */
-class Affiliates_MailChimp {
+class Affiliates_Mailchimp {
 
 	/**
 	 * Error notices
@@ -78,7 +78,7 @@ class Affiliates_MailChimp {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds the admin section.
 	 */
@@ -106,6 +106,7 @@ class Affiliates_MailChimp {
 		if ( !class_exists( 'Affiliates_Mailchimp_Handler' ) ) {
 			require_once 'class-affiliates-mailchimp-handler.php';
 		}
+
 		$options = get_option( 'affiliates-mailchimp' );
 
 		if ( isset( $_POST['submit'] ) ) {
@@ -118,8 +119,8 @@ class Affiliates_MailChimp {
 				$options['delete_settings']    = !empty( $_POST['delete_settings'] ) ? 1 : 0;
 				$options_ids = Affiliates_Mailchimp_Handler::set_ids( $options['list_name'] );
 			}
-			update_option( 'affiliates-mailchimp', array_merge($options, $options_ids ) );
-			
+			update_option( 'affiliates-mailchimp', array_merge( $options, $options_ids ) );
+
 		} else {
 			if ( isset( $_POST['generate'] ) ) {
 				if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'synchronize' ) ) {
@@ -305,7 +306,7 @@ class Affiliates_MailChimp {
 		$output_sync .= '<p>';
 		$output_sync .= wp_kses(
 			sprintf(
-				__( 'To add a large number of affiliates to a list, we recommend to use the Export features available with <a href="%s">Affiliates Pro</a> and <a href="%s">Affiliates Enterprise</a> instead.', 'affiliates-mailchimp' ),
+				__( 'To add a large number of affiliates to a list, we recommend to use the Export features available with <a href="%1$1s">Affiliates Pro</a> and <a href="%2$2s">Affiliates Enterprise</a> instead.', 'affiliates-mailchimp' ),
 				esc_attr( 'https://www.itthinx.com/shop/affiliates-pro/' ),
 				esc_attr( 'https://www.itthinx.com/shop/affiliates-enterprise/' )
 			),
@@ -318,7 +319,7 @@ class Affiliates_MailChimp {
 		$output_sync .= '<li>';
 		$output_sync .= wp_kses(
 			sprintf(
-				__( '<strong>Export</strong> your affiliates as described <a href="%s">here</a> for Affiliates Pro or <a href="%s">here</a> for Affiliates Enterprise.', 'affiliates-mailchimp' ),
+				__( '<strong>Export</strong> your affiliates as described <a href="%1$1s">here</a> for Affiliates Pro or <a href="%2$2s">here</a> for Affiliates Enterprise.', 'affiliates-mailchimp' ),
 				esc_attr( 'http://docs.itthinx.com/document/affiliates-pro/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' ),
 				esc_attr( 'http://docs.itthinx.com/document/affiliates-enterprise/affiliate-program-management/managing-affiliates/listing-searching-and-exporting/' )
 			),
@@ -343,5 +344,4 @@ class Affiliates_MailChimp {
 		echo $output_sync;
 		// @codingStandardsIgnoreEnd
 	}
-}
-Affiliates_MailChimp::init();
+} Affiliates_Mailchimp::init();
