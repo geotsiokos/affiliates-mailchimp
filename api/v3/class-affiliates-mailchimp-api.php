@@ -5,7 +5,7 @@
 // todo readd the default API file 
 // todo rename class name
 // todo rename Mailchimp error to Affiliates_Mailchimp_Exception
-// @todo decide what should be done with bootstrap.php
+// todo decide what should be done with bootstrap.php
 class Affiliates_Mailchimp_Api
 {
 	protected $version = '3.0';
@@ -177,7 +177,7 @@ class Affiliates_Mailchimp_Api
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		mailchimp_debug('api.subscribe', "Subscribing {$email}", $data);
+		//mailchimp_debug('api.subscribe', "Subscribing {$email}", $data);
 		return $this->post("lists/$list_id/members", $data);
 	}
 	/**
@@ -214,7 +214,7 @@ class Affiliates_Mailchimp_Api
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		mailchimp_debug('api.update_member', "Updating {$email}", $data);
+		//mailchimp_debug('api.update_member', "Updating {$email}", $data);
 		return $this->patch("lists/$list_id/members/$hash", $data);
 	}
 	/**
@@ -257,7 +257,7 @@ class Affiliates_Mailchimp_Api
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		mailchimp_debug('api.update_or_create', "Update Or Create {$email}", $data);
+		//mailchimp_debug('api.update_or_create', "Update Or Create {$email}", $data);
 		return $this->put("lists/$list_id/members/$hash", $data);
 	}
 	/**
@@ -617,7 +617,7 @@ class Affiliates_Mailchimp_Api
 			if (mailchimp_email_is_privacy_protected($email) || mailchimp_email_is_amazon($email)) {
 				return false;
 			}
-			mailchimp_debug('api.addCart', "Adding Cart :: {$email}", $data = $cart->toArray());
+			//mailchimp_debug('api.addCart', "Adding Cart :: {$email}", $data = $cart->toArray());
 			$data = $this->post("ecommerce/stores/$store_id/carts", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
 			return $cart->setStoreID($store_id)->fromArray($data);
@@ -645,13 +645,13 @@ class Affiliates_Mailchimp_Api
 			if (mailchimp_email_is_privacy_protected($email) || mailchimp_email_is_amazon($email)) {
 				return false;
 			}
-			mailchimp_debug('api.updateCart', "Updating Cart :: {$email}", $data = $cart->toArrayForUpdate());
+			//mailchimp_debug('api.updateCart', "Updating Cart :: {$email}", $data = $cart->toArrayForUpdate());
 			$data = $this->patch("ecommerce/stores/$store_id/carts/{$cart->getId()}", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
 			return $cart->setStoreID($store_id)->fromArray($data);
 		} catch (Affiliates_MailChimp_Exception $e) {
 			if (!$silent) throw $e;
-			mailchimp_log('api.updateCart', $e->getMessage());
+			//mailchimp_log('api.updateCart', $e->getMessage());
 			return false;
 		} catch (\Exception $e) {
 			if (!$silent) throw $e;
