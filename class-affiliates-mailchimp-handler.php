@@ -33,9 +33,11 @@ class Affiliates_Mailchimp_Handler {
 	 */
 	public static function init() {
 		if ( !class_exists( 'Affiliates_Mailchimp_Api' ) ) {
-			//require_once 'api/v3/class-affiliates-mailchimp-api.php';
 			require_once 'api/v3/class-affiliates-mailchimp-api.php';
 		} //self::new_helper();
+		if ( !class_exists( 'Affiliates_Mailchimp_Exception' ) ) {
+			require_once 'api/v3/class-affiliates-mailchimp-exception.php';
+		}
 		add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
 		add_action( 'affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
 		add_action( 'affiliates_deleted_affiliate', array( __CLASS__, 'affiliates_deleted_affiliate' ) );
