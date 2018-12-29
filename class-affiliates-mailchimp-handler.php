@@ -93,8 +93,6 @@ class Affiliates_Mailchimp_Handler {
 	 * @param string $status
 	 */
 	public static function affiliates_updated_affiliate_status( $affiliate_id, $old_status, $status ) {
-		//$affiliate_data = self::get_affiliate_data( $affiliate_id );
-		//$affiliate_data['status'] = $status;
 		switch ( $status ) {
 			case 'active' :
 			case 'pending' :
@@ -283,7 +281,6 @@ class Affiliates_Mailchimp_Handler {
 
 	/**
 	 * Add existing affiliates to mailchimp list
-	 * @todo check syncing
 	 */
 	public static function synchronize() {
 		$affiliates = affiliates_get_affiliates();
@@ -426,6 +423,10 @@ class Affiliates_Mailchimp_Handler {
 
 	/**
 	 * Get id, wrapper for interest id
+	 *
+	 * @param string $list_id
+	 * @param string $category_id
+	 * @return string $interest_id
 	 */
 	private static function get_interest_id( $list_id = null, $category_id = null ) {
 		$interest_id = null;
@@ -454,7 +455,7 @@ class Affiliates_Mailchimp_Handler {
 	/**
 	 * Stores List, Category and Interest IDs
 	 *
-	 * @param string $list_name
+	 * @param string $list_name the list name
 	 * @return NULL|array $options with ids
 	 */
 	public static function set_ids( $list_name ) {
@@ -474,98 +475,4 @@ class Affiliates_Mailchimp_Handler {
 		return $options;
 	}
 
-	/**
-	 * Helper for MailChimp Api
-	 * @todo remove after testing is over
-	 */
-	public static function new_helper() {
-		$options = get_option( 'affiliates-mailchimp' );self::write_log($options);
-		if ( $options['api_key'] ) {
-			//$interest    = $options['interest'];
-			
-			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
-			/**
-			 * Tests
-			 */
-			// pass self::write_log( 'ping'); self::write_log( $api->ping() );
-			// pass self::write_log( 'lists' ); self::write_log( $api->getLists( true ) );
-			// array [list_id] = list_name
-			$lists = $api->getLists( true );
-			foreach( $lists as $list_id => $list_name ) {
-				if ( $list_id == $options['list_id'] ) {
-					$the_id = $list_id; self::write_log('the id'); self::write_log($the_id);
-				}
-			}
-			
-			$interest_categories = $api->getInterestGroups( $the_id );//self::write_log( 'groups'); self::write_log($api->getInterestGroups( $the_id ));
-			if ( is_array( $interest_categories ) ) {
-				if ( isset( $interest_categories['categories'] ) ) {
-					foreach( $interest_categories['categories'] as $category ) {
-						if (
-							$category['id'] == $options['category_id'] &&
-							$category['title'] == $options['interests_category']
-						) {
-							$interest_category_id = $category['id'];
-							//$interest_category_name = $category['title'];
-						}
-					}
-				}
-			}//self::write_log('cat id');self::write_log($interest_category_id);
-			
-			$interests = $api->getInterestGroupOptions( $the_id, $interest_category_id );
-			//self::write_log('interests');self::write_log($interests);
-			if ( is_array( $interests ) ) {
-				if ( isset( $interests['interests'] ) ) {
-					foreach( $interests['interests'] as $interest ) {
-						if (
-							$interest['id'] == $options['interest_id'] &&
-							$interest['name'] == $options['interest']
-						) {
-							$interest_id = $interest['id'];
-						}
-					}
-				}
-			}
-			
-			$check = $api->member( $list_id, 'gtsiokos@gmail.com' );
-			self::write_log( 'check member'); self::write_log( $check);
-			if ( isset( $check ) ) {
-				// update existing subscriber
-				// it will only update personal user data
-				if ( is_array( $check ) ) {
-					if ( isset( $check['status'] ) ) {
-						switch ( $check['status'] ) {
-							case 'subscribed' :
-								$status = true;
-								break;
-							case 'unsubscribed' :
-								$status = false;
-								break;
-							case 'cleaned' :
-								$status = null;
-								break;
-							default :
-								$status = true;
-						}
-						$api->update( $the_id, 'gtsiokos@gmail.com', $status, $merge_fields = array(), $list_interests = array() );
-					}
-				}
-			} else {
-				// add new subscriber
-				$api->subscribe($the_id, 'gtsiokos@gmail.com', $status, array(), array() );
-			}
-		}
-	}
-
-	/**
-	 * My error handler
-	 * @todo remove after testing is over
-	 */
-	public static function write_log( $log ) {
-		if ( is_array( $log ) || is_object( $log ) ) {
-			error_log( print_r( $log, true ) );
-		} else {
-			error_log( $log );
-		}
-	}
 } Affiliates_Mailchimp_Handler::init();
