@@ -32,9 +32,9 @@ class Affiliates_Mailchimp_Handler {
 	 * Initialize the Class
 	 */
 	public static function init() {
-		if ( !class_exists( 'Mailchimp_Api' ) ) {
+		if ( !class_exists( 'Affiliates_Mailchimp_Api' ) ) {
 			//require_once 'api/v3/class-affiliates-mailchimp-api.php';
-			require_once 'api/v3/class-mailchimp-api.php';
+			require_once 'api/v3/class-affiliates-mailchimp-api.php';
 		} //self::new_helper();
 		add_action( 'affiliates_added_affiliate', array( __CLASS__, 'affiliates_added_affiliate' ) );
 		add_action( 'affiliates_updated_affiliate', array( __CLASS__, 'affiliates_updated_affiliate' ) );
@@ -174,7 +174,7 @@ class Affiliates_Mailchimp_Handler {
 				$status = false;
 			}
 
-			$api = new MailChimp_Api( $options['api_key'] );
+			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 
 			if ( isset( $list_id ) ) {
 				// check if the user belongst to the list
@@ -241,7 +241,7 @@ class Affiliates_Mailchimp_Handler {
 		if ( $options['api_key'] ) {
 			$list_id = isset( $options['list_id'] ) ? $options['list_id'] : null;
 
-			$api = new MailChimp_Api( $options['api_key'] );
+			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 
 			if ( isset( $list_id ) ) {
 				if ( $user_info ) {
@@ -354,7 +354,7 @@ class Affiliates_Mailchimp_Handler {
 		$options = get_option( 'affiliates-mailchimp' );
 
 		if ( $options['api_key'] ) {
-			$api = new Mailchimp_Api( $options['api_key'] );
+			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 			// fetch an array of lists where key is the id and value is the name
 			$lists = $api->getLists( true );
 
@@ -381,7 +381,7 @@ class Affiliates_Mailchimp_Handler {
 			$options = get_option( 'affiliates-mailchimp' );
 
 			if ( $options['api_key'] ) {
-				$api = new Mailchimp_Api( $options['api_key'] );
+				$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 				$interest_categories = $api->getInterestGroups( $list_id );
 				if ( is_array( $interest_categories ) ) {
 					if ( isset( $interest_categories['categories'] ) ) {
@@ -459,7 +459,7 @@ class Affiliates_Mailchimp_Handler {
 		if ( $options['api_key'] ) {
 			//$interest    = $options['interest'];
 			
-			$api = new Mailchimp_Api( $options['api_key'] );
+			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 			/**
 			 * Tests
 			 */
