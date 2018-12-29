@@ -58,7 +58,7 @@ class Affiliates_Mailchimp_Subscription {
 				if ( isset( $_POST['aff_subscription'] ) ) {
 					if ( wp_verify_nonce( $_POST['aff-mailchimp-subscribe-nonce'], 'aff-mailchimp-subscribe-setting' ) ) {
 						update_user_meta( $user_id, 'aff_mailchimp_subscription', !empty( $_POST['subscription_option'] ) ? 1 : 0 );
-						Affiliates_Mailchimp_Handler::affiliate_update_subscription( $user_id, false );
+						Affiliates_Mailchimp_Handler::affiliate_update_subscription_status( $user_id, false );
 					}
 				}
 				$output .= '<form method="post" name="options" action="">';
