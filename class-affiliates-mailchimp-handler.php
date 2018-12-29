@@ -53,10 +53,10 @@ class Affiliates_Mailchimp_Handler {
 		$user_id = affiliates_get_affiliate_user( $affiliate_id );
 		if ( $user_id != null ) {
 			$user_data = self::get_user_data( $user_id );
-			self::manage_subscriber( $user_id, $user_data );
+			self::manage_subscriber( $user_id, $user_data, true );
 		} else {
 			$affiliate_data = self::get_affiliate_data( $affiliate_id );
-			self::manage_subscriber( $affiliate_id, $affiliate_data );
+			self::manage_subscriber( $affiliate_id, $affiliate_data, true );
 		}
 	}
 
@@ -69,10 +69,10 @@ class Affiliates_Mailchimp_Handler {
 		$user_id = affiliates_get_affiliate_user( $affiliate_id );
 		if ( $user_id != null ) {
 			$user_data = self::get_user_data( $user_id );
-			self::manage_subscriber( $user_id, $user_data );
+			self::manage_subscriber( $user_id, $user_data, false );
 		} else {
 			$affiliate_data = self::get_affiliate_data( $affiliate_id );
-			self::manage_subscriber( $affiliate_id, $affiliate_data );
+			self::manage_subscriber( $affiliate_id, $affiliate_data, false );
 		}
 	}
 
@@ -82,7 +82,7 @@ class Affiliates_Mailchimp_Handler {
 	 * @param int $affiliate_id
 	 */
 	public static function affiliates_deleted_affiliate( $affiliate_id ) {
-		self::affiliate_update_subscription( $affiliate_id, true );
+		self::affiliate_update_subscription_status( $affiliate_id, true );
 	}
 
 	/**
@@ -93,20 +93,31 @@ class Affiliates_Mailchimp_Handler {
 	 * @param string $status
 	 */
 	public static function affiliates_updated_affiliate_status( $affiliate_id, $old_status, $status ) {
-		$affiliate_data = self::get_affiliate_data( $affiliate_id );
-		$affiliate_data['status'] = $status;
-		self::manage_subscriber( $affiliate_id, $affiliate_data );
+		//$affiliate_data = self::get_affiliate_data( $affiliate_id );
+		//$affiliate_data['status'] = $status;
+		switch ( $status ) {
+			case 'active' :
+			case 'pending' :
+				$user_id = affiliates_get_affiliate_user( $affiliate_id );
+				self::affiliate_update_subscription_status( $user_id, false );
+			case 'deleted' :
+				self::affiliate_update_subscription_status( $affiliate_id, true );
+			default :
+				$user_id = affiliates_get_affiliate_user( $affiliate_id );
+				self::affiliate_update_subscription_status( $user_id, false );
+		}
 	}
 
 	/**
-	 * Updates subscription status according to the affiliate's choice in the frontend.<br>
-	 * The affiliate can update subscription status through <br>
+	 * Updates subscription status according to the affiliate's choice in the frontend,<br>
+	 * the affiliate's status( active, pending, deleted ), or when the affiliate is deleted.
+	 * The affiliate can update subscription status in the front-end through <br>
 	 * [affiliates_mailchimp_subscription] form.
 	 *
 	 * @param int $user_id
-	 * @param bool $deleted whether this is a frontend subscription update, or a deleted user/affiliate
+	 * @param bool $deleted whether this is a subscription update(false), or a deleted user/affiliate(true)
 	 */
-	public static function affiliate_update_subscription( $user_id, $deleted = false ) {
+	public static function affiliate_update_subscription_status( $user_id, $deleted = false ) {
 		$options = array();
 		$options = get_option( 'affiliates-mailchimp' );
 
@@ -114,25 +125,30 @@ class Affiliates_Mailchimp_Handler {
 			$list_id     = isset( $options['list_id'] ) ? $options['list_id'] : null;
 			$interest_id = isset( $options['interest_id'] ) ? $options['interest_id'] : null;
 
-			$user_data = self::get_user_data( $user_id );
-			$subscription_status = get_user_meta( $user_id, 'aff_mailchimp_subscription', true );
-
-			if ( $subscription_status == '1' ) {
-				$status = 'subscribed';
-			} else {
-				$status = 'unsubscribed';
-			}
 			// When a list member is deleted, can only be re-added through the
-			// supported forms offered by MC in their dashboard.
+			// supported forms offered by MC in the list dashboard, under
+			// <i>Signup forms</i>.
 			// Here we choose to unsubscribe an affiliate whenever is deleted
 			// to avoid such inconsistencies.
+			// In this case the user_id is actually the affiliate_id
+			// because of the $deleted flag and is treated as such
 			if ( $deleted ) {
 				$status = 'unsubscribed';
 				$user_data = self::get_affiliate_data( $user_id );
+			} else {
+				$user_data = self::get_user_data( $user_id );
+				if ( count( $user_data ) > 0 ) {
+					$subscription_status = get_user_meta( $user_id, 'aff_mailchimp_subscription', true );
+					if ( $subscription_status == '1' ) {
+						$status = 'subscribed';
+					} else {
+						$status = 'unsubscribed';
+					}
+				}
 			}
 
 			if ( count( $user_data ) > 0 ) {
-				$api = new MailChimp_Api( $options['api_key'] );
+				$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
 				if ( isset( $list_id ) ) {
 					$check = $api->member( $list_id, $user_data['email'] );
 					if ( isset( $check ) ) {
@@ -158,8 +174,9 @@ class Affiliates_Mailchimp_Handler {
 	 *
 	 * @param int $user_id
 	 * @param array $user_info
+	 * @param bool $status_update true for an existing affiliate in the list but unsubscribed, false for updating personal data
 	 */
-	public static function manage_subscriber( $user_id, $user_info ) {
+	public static function manage_subscriber( $user_id, $user_info, $status_update ) {
 		$options = array();
 		$options = get_option( 'affiliates-mailchimp' );
 
@@ -199,6 +216,11 @@ class Affiliates_Mailchimp_Handler {
 										break;
 									default :
 										$status = true;
+								}
+								// affiliate exists in the list
+								// but is unsubscribed
+								if ( $status_update ) {
+									$status = true;
 								}
 								$api->update(
 									$list_id,
