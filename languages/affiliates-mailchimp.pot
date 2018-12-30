@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2018-09-06 20:05+0200\n"
+        "POT-Creation-Date: 2018-12-30 21:10+0100\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,6 +87,7 @@ msgstr  ""
 msgid   "MailChimp"
 msgstr  ""
 
+#: class-affiliates-mailchimp-subscription.php:78
 #: class-affiliates-mailchimp.php:200
 msgid   "NO"
 msgstr  ""
@@ -100,6 +101,7 @@ msgstr  ""
 msgid   "Please save your changes first."
 msgstr  ""
 
+#: class-affiliates-mailchimp-subscription.php:85
 #: class-affiliates-mailchimp.php:225
 msgid   "Save"
 msgstr  ""
@@ -138,6 +140,7 @@ msgstr  ""
 msgid   "Whether a double opt-in confirmation message is sent."
 msgstr  ""
 
+#: class-affiliates-mailchimp-subscription.php:74
 #: class-affiliates-mailchimp.php:196
 msgid   "YES"
 msgstr  ""

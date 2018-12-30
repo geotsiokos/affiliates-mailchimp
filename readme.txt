@@ -2,10 +2,10 @@
 Contributors: itthinx, proaktion, gtsiokos
 Donate link: http://www.itthinx.com/shop/
 Tags: affiliate, affiliates, referral, growth marketing, MailChimp
-Requires at least: 4.0.0
-Tested up to: 4.9.8
+Requires at least: 4.9
+Tested up to: 5.0
 Requires PHP: 5.6.0
-Stable tag: 3.0.1
+Stable tag: 3.1.0
 License: GPLv3
 
 Integrates [Affiliates](https://wordpress.org/plugins/affiliates/), [Affiliates Pro](https://www.itthinx.com/shop/affiliates-pro/) and [Affiliates Enterprise](https://www.itthinx.com/shop/affiliates-enterprise/) with [MailChimp](https://mailchimp.com).
@@ -58,22 +58,9 @@ Please refer to the Documentation for further details:
 
 == Changelog ==
 
-= 3.0.1 =
-* Fixed unspecific function name used for the deactivation hook.
-* Security fix : fixed unsanitized $_POST data stored.
-* Improved code formatting.
-* Added the plugin version constant.
-* Updated the minimum PHP version required.
-* Fixed some descriptions in the settings.
-* Added a confirmation before attempting to synchronize and avoiding empty list name.
-* Added the translation template.
-* Added a section explaining how to import larger sets of affiliates.
+= 3.1.0 =
+* @todo
 
-= 3.0.0 =
-* Affiliates, Affiliates Pro and Affiliates Enterprise 2.x and 3.x compatible.
-* Adds support for MailChimp API v3.
-* Added option to delete settings upon deactivation.
-* Wordpress 4.9.8 compatible.
 
 == Upgrade Notice ==
 

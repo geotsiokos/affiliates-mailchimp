@@ -54,7 +54,7 @@ class Affiliates_Mailchimp_Subscription {
 				if ( $aff_subscription_status == '1' ) {
 					$aff_status_description = esc_html__( $aff_status_active_subscription, 'affiliates-mailchimp' );
 				} else {
-					$aff_status_description = esc_html__( $aff_status_cancelled_subscription, 'affiliate-mailchimp' );
+					$aff_status_description = esc_html__( $aff_status_cancelled_subscription, 'affiliates-mailchimp' );
 				}
 
 				if ( isset( $_POST['aff_subscription'] ) ) {
