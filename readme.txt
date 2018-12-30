@@ -59,7 +59,13 @@ Please refer to the Documentation for further details:
 == Changelog ==
 
 = 3.1.0 =
-* @todo
+* Switched to API provided by MailChimp.
+* Fixed API handler to use the new API.
+* Added shortcode to let affiliates (un)subscribe from the front-end.
+* Improved code formatting.
+* WordPress 5.0.2 compatible.
+* Updated the translation template.
+* Fixed Affiliates, Affiliates Pro and Affiliates Enterprise plugin dependency check.
 
 
 == Upgrade Notice ==
