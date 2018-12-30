@@ -49,6 +49,14 @@ function affiliates_mailchimp_deactivate() {
 	}
 }
 
-require_once 'class-affiliates-mailchimp.php';
-require_once 'class-affiliates-mailchimp-handler.php';
-require_once 'class-affiliates-mailchimp-subscription.php';
+/**
+ * Plugin boot.
+ */
+function affiliates_mailchimp_plugins_loaded() {
+	if ( class_exists( 'Affiliates' ) ) {
+		require_once 'class-affiliates-mailchimp.php';
+		require_once 'class-affiliates-mailchimp-handler.php';
+		require_once 'class-affiliates-mailchimp-subscription.php';
+	}
+}
+add_action( 'plugins_loaded', 'affiliates_mailchimp_plugins_loaded' );
