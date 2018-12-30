@@ -1,7 +1,6 @@
-Affiliates MailChimp               Changelog              www.itthinx.com
+Affiliates MailChimp                 Changelog                 www.itthinx.com
 
 = 3.0.1 =
-
 * Fixed unspecific function name used for the deactivation hook.
 * Security fix : fixed unsanitized $_POST data stored.
 * Improved code formatting.
