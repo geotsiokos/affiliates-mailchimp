@@ -25,7 +25,7 @@
  * Author URI: http://www.itthinx.com/
  * Donate-Link: http://www.itthinx.com/shop/
  * License: GPLv3
- * Version: 3.0.1
+ * Version: 3.1.0
  */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -35,6 +35,7 @@ if ( !defined( 'ABSPATH' ) ) {
 define( 'AFFILIATES_MAILCHIMP_PLUGIN_VERSION', '3.0.1' );
 
 define( 'AFFILIATES_MAILCHIMP_PLUGIN_DOMAIN', 'affiliates-mailchimp' );
+define( 'AFFILIATES_MAILCHIMP_PLUGIN_VERSION', '3.1.0' );
 define( 'AFFILIATES_MAILCHIMP_FILE', __FILE__ );
 define( 'AFFILIATES_MAILCHIMP_CORE_DIR', WP_PLUGIN_DIR . '/affiliates-mailchimp' );
 
@@ -51,4 +52,5 @@ function affiliates_mailchimp_deactivate() {
 }
 
 require_once 'class-affiliates-mailchimp.php';
-require_once 'class-affiliates-mc.php';
+require_once 'class-affiliates-mailchimp-handler.php';
+require_once 'class-affiliates-mailchimp-subscription.php';
