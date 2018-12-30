@@ -49,10 +49,12 @@ class Affiliates_Mailchimp_Subscription {
 				$user_id = affiliates_get_affiliate_user( intval( $affiliate_id ) );
 				$aff_subscription_status = get_user_meta( $user_id, 'aff_mailchimp_subscription', true );
 				$aff_status_description = '';
+				$aff_status_active_subscription = apply_filters( 'affiliates_mailchimp_active_subscription', 'You are subscribed to the mailing list. If you wish to stop receiving newsletters, please select NO and click on the SAVE button.' );
+				$aff_status_cancelled_subscription = apply_filters( 'affiliates_mailchimp_cancelled_subscription', 'If you wish to subscribe to the mailing list, please select YES and click on the SAVE button.' );
 				if ( $aff_subscription_status == '1' ) {
-					$aff_status_description = esc_html__( 'You are subscribed to the mailing list. If you wish to stop receiving newsletters, please select NO and click on the SAVE button.', 'affiliates-mailchimp' );
+					$aff_status_description = esc_html__( $aff_status_active_subscription, 'affiliates-mailchimp' );
 				} else {
-					$aff_status_description = esc_html__( 'If you wish to subscribe to the mailing list, please select YES and click on the SAVE button.', 'affiliates-mailchimp' );
+					$aff_status_description = esc_html__( $aff_status_cancelled_subscription, 'affiliate-mailchimp' );
 				}
 
 				if ( isset( $_POST['aff_subscription'] ) ) {
