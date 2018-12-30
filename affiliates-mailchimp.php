@@ -32,10 +32,8 @@ if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AFFILIATES_MAILCHIMP_PLUGIN_VERSION', '3.0.1' );
-
-define( 'AFFILIATES_MAILCHIMP_PLUGIN_DOMAIN', 'affiliates-mailchimp' );
 define( 'AFFILIATES_MAILCHIMP_PLUGIN_VERSION', '3.1.0' );
+define( 'AFFILIATES_MAILCHIMP_PLUGIN_DOMAIN', 'affiliates-mailchimp' );
 define( 'AFFILIATES_MAILCHIMP_FILE', __FILE__ );
 define( 'AFFILIATES_MAILCHIMP_CORE_DIR', WP_PLUGIN_DIR . '/affiliates-mailchimp' );
 
