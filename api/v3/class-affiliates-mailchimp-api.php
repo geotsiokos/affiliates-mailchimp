@@ -1,17 +1,34 @@
 <?php
+
 /**
  * Class Affiliates_Mailchimp_Api
  */
-// todo readd the default API file 
-// todo rename class name
-// todo rename Mailchimp error to Affiliates_Mailchimp_Exception
-// todo decide what should be done with bootstrap.php
 class Affiliates_Mailchimp_Api
 {
 	protected $version = '3.0';
 	protected $data_center = 'us2';
 	protected $api_key = null;
 	protected $auth_type = 'key';
+	
+	protected static $instance = null;
+	
+	/**
+	 * @return null
+	 */
+	public static function getInstance()
+	{
+		return static::$instance;
+	}
+	
+	/**
+	 * @param $api_key
+	 * @return Affiliates_Mailchimp_Api
+	 */
+	public static function constructInstance($api_key)
+	{
+		return static::$instance = new Affiliates_Mailchimp_Api($api_key);
+	}
+	
 	/**
 	 * MailChimpService constructor.
 	 * @param null $api_key
@@ -22,6 +39,7 @@ class Affiliates_Mailchimp_Api
 			$this->setApiKey($api_key);
 		}
 	}
+	
 	/**
 	 * @param $key
 	 * @return $this
@@ -29,12 +47,16 @@ class Affiliates_Mailchimp_Api
 	public function setApiKey($key)
 	{
 		$parts = str_getcsv($key, '-');
+		
 		if (count($parts) == 2) {
 			$this->data_center = $parts[1];
 		}
+		
 		$this->api_key = $parts[0];
+		
 		return $this;
 	}
+	
 	/**
 	 * @param $dc
 	 * @return $this
@@ -42,8 +64,10 @@ class Affiliates_Mailchimp_Api
 	public function setDataCenter($dc)
 	{
 		$this->data_center = $dc;
+		
 		return $this;
 	}
+	
 	/**
 	 * @param $version
 	 * @return $this
@@ -51,8 +75,10 @@ class Affiliates_Mailchimp_Api
 	public function setVersion($version)
 	{
 		$this->version = $version;
+		
 		return $this;
 	}
+	
 	/**
 	 * @param bool $return_profile
 	 * @param bool $throw_error
@@ -71,6 +97,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @return array|mixed|null|object
 	 * @throws Exception
@@ -81,6 +108,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->get('/');
 	}
+	
 	/**
 	 * @return array|mixed|null|object
 	 * @throws Exception
@@ -91,6 +119,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->get('authorized-apps');
 	}
+	
 	/**
 	 * @param $id
 	 * @return array|mixed|null|object
@@ -102,6 +131,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->get("authorized-apps/$id");
 	}
+	
 	/**
 	 * @param $client_id
 	 * @param $client_secret
@@ -114,6 +144,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->post('authorized-apps', array('client_id' => $client_id, 'client_secret' => $client_secret));
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $email
@@ -127,6 +158,7 @@ class Affiliates_Mailchimp_Api
 		$hash = md5(strtolower(trim($email)));
 		return $this->get("lists/$list_id/members/$hash", array());
 	}
+	
 	/**
 	 * @param $list_id
 	 * @return array|mixed|null|object
@@ -138,6 +170,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->get("lists/$list_id/members");
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $email
@@ -151,6 +184,7 @@ class Affiliates_Mailchimp_Api
 		$hash = md5(strtolower(trim($email)));
 		return $this->delete("lists/$list_id/members/$hash", array());
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $email
@@ -171,15 +205,20 @@ class Affiliates_Mailchimp_Api
 				'merge_fields' => $merge_fields,
 				'interests' => $list_interests,
 		);
+		
 		if (empty($data['merge_fields'])) {
 			unset($data['merge_fields']);
 		}
+		
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		//mailchimp_debug('api.subscribe', "Subscribing {$email}", $data);
+		
+		error_log('api.subscribe Subscribing' . $email . ' ' . $data);
+		
 		return $this->post("lists/$list_id/members", $data);
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $email
@@ -193,6 +232,7 @@ class Affiliates_Mailchimp_Api
 	public function update($list_id, $email, $subscribed = true, $merge_fields = array(), $list_interests = array())
 	{
 		$hash = md5(strtolower(trim($email)));
+		
 		if ($subscribed === true) {
 			$status = 'subscribed';
 		} elseif ($subscribed === false) {
@@ -202,21 +242,28 @@ class Affiliates_Mailchimp_Api
 		} else {
 			$status = $subscribed;
 		}
+		
 		$data = array(
 				'email_address' => $email,
 				'status' => $status,
 				'merge_fields' => $merge_fields,
 				'interests' => $list_interests,
 		);
+		
 		if (empty($data['merge_fields'])) {
 			unset($data['merge_fields']);
 		}
+		
+		
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		//mailchimp_debug('api.update_member', "Updating {$email}", $data);
+		
+		error_log('api.update_member Updating ' . $email);
+		
 		return $this->patch("lists/$list_id/members/$hash", $data);
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $email
@@ -231,6 +278,7 @@ class Affiliates_Mailchimp_Api
 	public function updateOrCreate($list_id, $email, $subscribed = true, $merge_fields = array(), $list_interests = array())
 	{
 		$hash = md5(strtolower(trim($email)));
+		
 		if ($subscribed === true) {
 			$status = 'subscribed';
 			$status_if_new = 'subscribed';
@@ -244,6 +292,7 @@ class Affiliates_Mailchimp_Api
 			$status = $subscribed;
 			$status_if_new = 'pending';
 		}
+		
 		$data = array(
 				'email_address' => $email,
 				'status' => $status,
@@ -251,15 +300,20 @@ class Affiliates_Mailchimp_Api
 				'merge_fields' => $merge_fields,
 				'interests' => $list_interests,
 		);
+		
 		if (empty($data['merge_fields'])) {
 			unset($data['merge_fields']);
 		}
+		
 		if (empty($data['interests'])) {
 			unset($data['interests']);
 		}
-		//mailchimp_debug('api.update_or_create', "Update Or Create {$email}", $data);
+		
+		error_log('api.update_or_create Update Or Create' . $email . ' ' . $data);
+		
 		return $this->put("lists/$list_id/members/$hash", $data);
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_CreateListSubmission $submission
 	 * @return array|mixed|null|object
@@ -271,6 +325,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->post('lists', $submission->getSubmission());
 	}
+	
 	/**
 	 * @param bool $as_list
 	 * @param int $count
@@ -282,6 +337,7 @@ class Affiliates_Mailchimp_Api
 	public function getLists($as_list = false, $count = 100)
 	{
 		$result = $this->get('lists', array('count' => $count));
+		
 		if ($as_list) {
 			$lists = array();
 			if ($result) {
@@ -293,10 +349,13 @@ class Affiliates_Mailchimp_Api
 					}
 				}
 			}
+			
 			return $lists;
 		}
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $id
 	 * @return bool
@@ -309,6 +368,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $id
 	 * @return array|mixed|null|object
@@ -320,6 +380,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->get('lists/' . $id);
 	}
+	
 	/**
 	 * @param $id
 	 * @return array|mixed|null|object
@@ -331,6 +392,7 @@ class Affiliates_Mailchimp_Api
 	{
 		return $this->delete('lists/'.$id);
 	}
+	
 	/**
 	 * @return array|mixed
 	 * @throws Exception
@@ -343,8 +405,10 @@ class Affiliates_Mailchimp_Api
 		foreach ($lists as $id => $name) {
 			$lists[$id] = $this->mergeFields($id, 100);
 		}
+		
 		return $lists;
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param int $count
@@ -356,8 +420,10 @@ class Affiliates_Mailchimp_Api
 	public function mergeFields($list_id, $count = 10)
 	{
 		$result = $this->get("lists/$list_id/merge-fields", array('count' => $count,));
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $list_id
 	 * @return array|mixed|null|object
@@ -371,8 +437,10 @@ class Affiliates_Mailchimp_Api
 			return array();
 		}
 		$result = $this->get("lists/$list_id/interest-categories");
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $list_id
 	 * @param $group_id
@@ -387,8 +455,10 @@ class Affiliates_Mailchimp_Api
 			return array();
 		}
 		$result = $this->get("lists/$list_id/interest-categories/$group_id/interests");
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param int $page
@@ -409,8 +479,10 @@ class Affiliates_Mailchimp_Api
 				'since' => ($since ? $since->format('Y-m-d H:i:s') : null),
 				'cid' => $campaign_id,
 		));
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @return MailChimp_WooCommerce_Store|bool
@@ -430,6 +502,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @return array|bool
@@ -444,6 +517,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @return array|bool|mixed|null|object
@@ -458,6 +532,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @return array|bool
 	 */
@@ -465,14 +540,18 @@ class Affiliates_Mailchimp_Api
 	{
 		try {
 			$data = $this->get("ecommerce/stores", array('count' => 50));
+			
 			if (!isset($data['stores']) || empty($data['stores'])) {
 				return array();
 			}
+			
 			$response = array();
+			
 			foreach ($data['stores'] as $store_data) {
 				$store = new MailChimp_WooCommerce_Store();
 				$response[] = $store->fromArray($store_data);
 			}
+			
 			return $response;
 		} catch (Affiliates_MailChimp_Exception $e) {
 			return false;
@@ -480,6 +559,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $is_syncing
@@ -492,15 +572,19 @@ class Affiliates_Mailchimp_Api
 			if (!($store = $this->getStore($store_id))) {
 				return false;
 			}
+			
 			// flag it as ^^^ is_syncing ^^^
 			$store->flagSyncing($is_syncing);
+			
 			// patch the store data
 			return $this->patch("ecommerce/stores/{$store_id}", $store->toArray());
+			
 		} catch (\Exception $e) {
 			mailchimp_log('flag.store_sync', $e->getMessage(). ' :: in '.$e->getFile().' :: on '.$e->getLine());
 		}
 		return false;
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_Store $store
 	 * @param bool $silent
@@ -519,6 +603,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_Store $store
 	 * @param bool $silent
@@ -537,6 +622,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @return bool
@@ -552,6 +638,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $customer_id
@@ -568,6 +655,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_Customer $customer
 	 * @return bool|MailChimp_WooCommerce_Customer
@@ -584,6 +672,7 @@ class Affiliates_Mailchimp_Api
 		$customer = new MailChimp_WooCommerce_Customer();
 		return $customer->fromArray($data);
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param int $page
@@ -600,8 +689,10 @@ class Affiliates_Mailchimp_Api
 				'count' => $count,
 				'offset' => ($page * $count),
 		));
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Cart $cart
@@ -614,10 +705,13 @@ class Affiliates_Mailchimp_Api
 	{
 		try {
 			$email = $cart->getCustomer()->getEmailAddress();
+			
 			if (mailchimp_email_is_privacy_protected($email) || mailchimp_email_is_amazon($email)) {
 				return false;
 			}
-			//mailchimp_debug('api.addCart', "Adding Cart :: {$email}", $data = $cart->toArray());
+			
+			error_log('api.addCart Adding Cart ' . $email . ' ' . $data = $cart->toArray());
+			
 			$data = $this->post("ecommerce/stores/$store_id/carts", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
 			return $cart->setStoreID($store_id)->fromArray($data);
@@ -630,6 +724,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Cart $cart
@@ -642,22 +737,26 @@ class Affiliates_Mailchimp_Api
 	{
 		try {
 			$email = $cart->getCustomer()->getEmailAddress();
+			
 			if (mailchimp_email_is_privacy_protected($email) || mailchimp_email_is_amazon($email)) {
 				return false;
 			}
-			//mailchimp_debug('api.updateCart', "Updating Cart :: {$email}", $data = $cart->toArrayForUpdate());
+			
+			error_log('api.updateCart', "Updating Cart :: {$email}", $data = $cart->toArrayForUpdate());
+			
 			$data = $this->patch("ecommerce/stores/$store_id/carts/{$cart->getId()}", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
 			return $cart->setStoreID($store_id)->fromArray($data);
 		} catch (Affiliates_MailChimp_Exception $e) {
 			if (!$silent) throw $e;
-			//mailchimp_log('api.updateCart', $e->getMessage());
+			mailchimp_log('api.updateCart', $e->getMessage());
 			return false;
 		} catch (\Exception $e) {
 			if (!$silent) throw $e;
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $id
@@ -675,6 +774,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $id
@@ -691,6 +791,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Customer $customer
@@ -713,6 +814,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $customer_id
@@ -728,6 +830,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Order $order
@@ -741,13 +844,16 @@ class Affiliates_Mailchimp_Api
 			if (!$this->validateStoreSubmission($order)) {
 				return false;
 			}
+			
 			// submit the first one
 			$data = $this->post("ecommerce/stores/$store_id/orders", $order->toArray());
+			
 			// if the order is in pending status, we need to submit the order again with a paid status.
 			if ($order->shouldConfirmAndPay() && $order->getFinancialStatus() !== 'paid') {
 				$order->setFinancialStatus('paid');
 				$data = $this->patch("ecommerce/stores/{$store_id}/orders/{$order->getId()}", $order->toArray());
 			}
+			
 			update_option('mailchimp-woocommerce-resource-last-updated', time());
 			$order = new MailChimp_WooCommerce_Order();
 			return $order->fromArray($data);
@@ -757,6 +863,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Order $order
@@ -772,11 +879,13 @@ class Affiliates_Mailchimp_Api
 			}
 			$id = $order->getId();
 			$data = $this->patch("ecommerce/stores/{$store_id}/orders/{$id}", $order->toArray());
+			
 			// if the order is in pending status, we need to submit the order again with a paid status.
 			if ($order->shouldConfirmAndPay() && $order->getFinancialStatus() !== 'paid') {
 				$order->setFinancialStatus('paid');
 				$data = $this->patch("ecommerce/stores/{$store_id}/orders/{$id}", $order->toArray());
 			}
+			
 			$order = new MailChimp_WooCommerce_Order();
 			return $order->fromArray($data);
 		} catch (\Exception $e) {
@@ -785,6 +894,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $order_id
@@ -801,6 +911,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $order_id
@@ -816,6 +927,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $product_id
@@ -832,6 +944,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param int $page
@@ -848,8 +961,10 @@ class Affiliates_Mailchimp_Api
 				'count' => $count,
 				'offset' => ($page * $count),
 		));
+		
 		return $result;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_Product $product
@@ -873,6 +988,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $product_id
@@ -888,6 +1004,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_PromoRule $rule
@@ -909,6 +1026,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_PromoRule $rule
@@ -927,6 +1045,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $rule
@@ -944,6 +1063,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param int $page
@@ -961,6 +1081,7 @@ class Affiliates_Mailchimp_Api
 				'offset' => $page > 1 ? (($page-1) * $count) : 0,
 				'include' => 'id',
 		]);
+		
 		$ids = array();
 		foreach ($result['promo_rules'] as $rule) {
 			$id = (string) $rule['id'];
@@ -968,6 +1089,7 @@ class Affiliates_Mailchimp_Api
 		}
 		return $ids;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param int $page
@@ -985,9 +1107,11 @@ class Affiliates_Mailchimp_Api
 				'count' => $count,
 				'offset' => $page > 1 ? (($page-1) * $count) : 0,
 		]);
+		
 		if ($return_original) {
 			return $result;
 		}
+		
 		$rules = array();
 		foreach ($result['promo_rules'] as $rule_data) {
 			$rule = new MailChimp_WooCommerce_PromoRule();
@@ -996,6 +1120,7 @@ class Affiliates_Mailchimp_Api
 		}
 		return $rules;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $rule_id
@@ -1014,9 +1139,11 @@ class Affiliates_Mailchimp_Api
 				'count' => $count,
 				'offset' => $page > 1 ? (($page-1) * $count) : 0,
 		]);
+		
 		if ($return_original) {
 			return $result;
 		}
+		
 		$rules = array();
 		foreach ($result as $rule_data) {
 			$rule = new MailChimp_WooCommerce_PromoCode();
@@ -1025,6 +1152,7 @@ class Affiliates_Mailchimp_Api
 		}
 		return $rules;
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $rule_id
@@ -1041,6 +1169,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_PromoRule $rule
@@ -1063,6 +1192,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param MailChimp_WooCommerce_PromoRule $rule
@@ -1082,6 +1212,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $store_id
 	 * @param $rule_id
@@ -1098,6 +1229,7 @@ class Affiliates_Mailchimp_Api
 			return false;
 		}
 	}
+	
 	/**
 	 * @param $target
 	 * @return bool
@@ -1111,6 +1243,7 @@ class Affiliates_Mailchimp_Api
 		}
 		return true;
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_Order $order
 	 * @return bool
@@ -1122,6 +1255,7 @@ class Affiliates_Mailchimp_Api
 		}
 		return true;
 	}
+	
 	/**
 	 * @param MailChimp_WooCommerce_Customer $customer
 	 * @return bool
@@ -1129,11 +1263,14 @@ class Affiliates_Mailchimp_Api
 	protected function validateStoreCustomer(MailChimp_WooCommerce_Customer $customer)
 	{
 		$email = $customer->getEmailAddress();
+		
 		if (!is_email($email) || mailchimp_email_is_amazon($email) || mailchimp_email_is_privacy_protected($email)) {
 			return false;
 		}
+		
 		return true;
 	}
+	
 	/**
 	 * @param $url
 	 * @param null $params
@@ -1145,10 +1282,14 @@ class Affiliates_Mailchimp_Api
 	protected function delete($url, $params = null)
 	{
 		$curl = curl_init();
+		
 		$options = $this->applyCurlOptions('DELETE', $url, $params);
+		
 		curl_setopt_array($curl, $options);
+		
 		return $this->processCurlResponse($curl);
 	}
+	
 	/**
 	 * @param $url
 	 * @param null $params
@@ -1160,10 +1301,14 @@ class Affiliates_Mailchimp_Api
 	protected function get($url, $params = null)
 	{
 		$curl = curl_init();
+		
 		$options = $this->applyCurlOptions('GET', $url, $params);
+		
 		curl_setopt_array($curl, $options);
+		
 		return $this->processCurlResponse($curl);
 	}
+	
 	/**
 	 * @param $url
 	 * @param $body
@@ -1175,15 +1320,21 @@ class Affiliates_Mailchimp_Api
 	{
 		// process the patch request the normal way
 		$curl = curl_init();
+		
 		$json = json_encode($body);
+		
 		$options = $this->applyCurlOptions('PATCH', $url, array(), array(
 				'Expect:',
 				'Content-Length: '.strlen($json),
 		));
+		
 		$options[CURLOPT_POSTFIELDS] = $json;
+		
 		curl_setopt_array($curl, $options);
+		
 		return $this->processCurlResponse($curl);
 	}
+	
 	/**
 	 * @param $url
 	 * @param $body
@@ -1195,15 +1346,21 @@ class Affiliates_Mailchimp_Api
 	protected function post($url, $body)
 	{
 		$curl = curl_init();
+		
 		$json = json_encode($body);
+		
 		$options = $this->applyCurlOptions('POST', $url, array(), array(
 				'Expect:',
 				'Content-Length: '.strlen($json),
 		));
+		
 		$options[CURLOPT_POSTFIELDS] = $json;
+		
 		curl_setopt_array($curl, $options);
+		
 		return $this->processCurlResponse($curl);
 	}
+	
 	/**
 	 * @param $url
 	 * @param $body
@@ -1215,15 +1372,21 @@ class Affiliates_Mailchimp_Api
 	protected function put($url, $body)
 	{
 		$curl = curl_init();
+		
 		$json = json_encode($body);
+		
 		$options = $this->applyCurlOptions('PUT', $url, array(), array(
 				'Expect:',
 				'Content-Length: '.strlen($json),
 		));
+		
 		$options[CURLOPT_POSTFIELDS] = $json;
+		
 		curl_setopt_array($curl, $options);
+		
 		return $this->processCurlResponse($curl);
 	}
+	
 	/**
 	 * @param string $extra
 	 * @param null|array $params
@@ -1232,14 +1395,18 @@ class Affiliates_Mailchimp_Api
 	protected function url($extra = '', $params = null)
 	{
 		$url = "https://{$this->data_center}.api.mailchimp.com/{$this->version}/";
+		
 		if (!empty($extra)) {
 			$url .= $extra;
 		}
+		
 		if (!empty($params)) {
 			$url .= '?'.(is_array($params) ? http_build_query($params) : $params);
 		}
+		
 		return $url;
 	}
+	
 	/**
 	 * @param $method
 	 * @param $url
@@ -1257,6 +1424,7 @@ class Affiliates_Mailchimp_Api
 				'body' => json_encode($body),
 		));
 	}
+	
 	/**
 	 * @param $method
 	 * @param $url
@@ -1267,6 +1435,7 @@ class Affiliates_Mailchimp_Api
 	protected function applyCurlOptions($method, $url, $params = array(), $headers = array())
 	{
 		$env = self::mailchimp_environment_variables();
+		
 		return array(
 				CURLOPT_USERPWD => "mailchimp:{$this->api_key}",
 				CURLOPT_CUSTOMREQUEST => strtoupper($method),
@@ -1283,6 +1452,7 @@ class Affiliates_Mailchimp_Api
 				), $headers)
 				);
 	}
+	
 	/**
 	 * @param $curl
 	 * @return array|mixed|null|object
@@ -1293,13 +1463,17 @@ class Affiliates_Mailchimp_Api
 	protected function processCurlResponse($curl)
 	{
 		$response = curl_exec($curl);
+		
 		$err = curl_error($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
+		
 		if ($err) {
 			throw new Affiliates_MailChimp_Exception('CURL error :: '.$err, '500');
 		}
+		
 		$data = json_decode($response, true);
+		
 		if (empty($info) || ($info['http_code'] >= 200 && $info['http_code'] <= 400)) {
 			if (is_array($data)) {
 				try {
@@ -1310,14 +1484,21 @@ class Affiliates_Mailchimp_Api
 			}
 			return $data;
 		}
+		
 		if ($info['http_code'] >= 400 && $info['http_code'] <= 500) {
+			if ($info['http_code'] == 403) {
+				throw new MailChimp_WooCommerce_RateLimitError();
+			}
 			throw new Affiliates_MailChimp_Exception($data['title'] .' :: '.$data['detail'], $data['status']);
 		}
+		
 		if ($info['http_code'] >= 500) {
 			throw new MailChimp_WooCommerce_ServerError($data['detail'], $data['status']);
 		}
+		
 		return null;
 	}
+	
 	/**
 	 * @param array $data
 	 * @return bool
@@ -1333,10 +1514,15 @@ class Affiliates_Mailchimp_Api
 			}
 			throw new Affiliates_MailChimp_Exception($message, $data['status']);
 		}
+		
 		// make sure the response is correct from the data in the response array
 		if (isset($data['status']) && $data['status'] >= 400) {
+			if ($data['http_code'] == 403) {
+				throw new MailChimp_WooCommerce_RateLimitError();
+			}
 			throw new Affiliates_MailChimp_Exception($data['detail'], $data['status']);
 		}
+		
 		return false;
 	}
 
@@ -1345,19 +1531,20 @@ class Affiliates_Mailchimp_Api
 	 *
 	 * @return object
 	 */
-	public function mailchimp_environment_variables() {
+	public function mailchimp_environment_variables()
+	{
 		global $wp_version;
 		
 		$o = get_option( 'affiliates-mailchimp', false );
 		
 		return (object) array(
-			'repo'        => 'master',
-			'environment' => 'production',
-			'version'     => '2.1.9',
-			'php_version' => phpversion(),
-			'wp_version'  => (empty($wp_version) ? 'Unknown' : $wp_version),
-			'wc_version'  => class_exists('WC') ? WC()->version : null,
-			//'logging' => ($o && is_array($o) && isset($o['mailchimp_logging'])) ? $o['mailchimp_logging'] : 'standard',
+				'repo'        => 'master',
+				'environment' => 'production',
+				'version'     => '2.1.9',
+				'php_version' => phpversion(),
+				'wp_version'  => (empty($wp_version) ? 'Unknown' : $wp_version),
+				'wc_version'  => class_exists('WC') ? WC()->version : null,
+				//'logging' => ($o && is_array($o) && isset($o['mailchimp_logging'])) ? $o['mailchimp_logging'] : 'standard',
 		);
 	}
 }

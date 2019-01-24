@@ -118,7 +118,7 @@ class Affiliates_MailChimp {
 		} else {
 			if ( isset( $_POST['generate'] ) ) {
 				if ( wp_verify_nonce( $_POST['aff-mailchimp-nonce'], 'synchronize' ) ) {
-					Affiliates_MC::synchronize();
+					Affiliates_Mailchimp_Handler::synchronize();
 				}
 			}
 		}

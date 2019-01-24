@@ -34,7 +34,7 @@ class Affiliates_Mailchimp_Handler {
 	public static function init() {
 		if ( !class_exists( 'Affiliates_Mailchimp_Api' ) ) {
 			require_once 'api/v3/class-affiliates-mailchimp-api.php';
-		} //self::new_helper();
+		}
 		if ( !class_exists( 'Affiliates_Mailchimp_Exception' ) ) {
 			require_once 'api/v3/class-affiliates-mailchimp-exception.php';
 		}
@@ -61,7 +61,7 @@ class Affiliates_Mailchimp_Handler {
 	}
 
 	/**
-	 * Updated Affiliate
+	 * Updated Affiliate, this is triggered only when affiliate data are updated.
 	 *
 	 * @param int $affiliate_id
 	 */
@@ -98,11 +98,14 @@ class Affiliates_Mailchimp_Handler {
 			case 'pending' :
 				$user_id = affiliates_get_affiliate_user( $affiliate_id );
 				self::affiliate_update_subscription_status( $user_id, false );
+				break;
 			case 'deleted' :
 				self::affiliate_update_subscription_status( $affiliate_id, true );
+				break;
 			default :
 				$user_id = affiliates_get_affiliate_user( $affiliate_id );
 				self::affiliate_update_subscription_status( $user_id, false );
+				break;
 		}
 	}
 
@@ -123,7 +126,7 @@ class Affiliates_Mailchimp_Handler {
 			$list_id     = isset( $options['list_id'] ) ? $options['list_id'] : null;
 			$interest_id = isset( $options['interest_id'] ) ? $options['interest_id'] : null;
 
-			// When a list member is deleted, can only be re-added through the
+			// When a list member is deleted, can be re-added only through the
 			// supported forms offered by MC in the list dashboard, under
 			// <i>Signup forms</i>.
 			// Here we choose to unsubscribe an affiliate whenever is deleted
@@ -167,12 +170,12 @@ class Affiliates_Mailchimp_Handler {
 	}
 
 	/**
-	 * Subscribe a new user to the mail list
+	 * Subscribe a new user to the mail list.
 	 * Update an existing user when name, surname or status change
 	 *
 	 * @param int $user_id
 	 * @param array $user_info
-	 * @param bool $status_update true for an existing affiliate in the list but unsubscribed, false for updating personal data
+	 * @param bool $status_update true for a new affiliate, false for updating personal data
 	 */
 	public static function manage_subscriber( $user_id, $user_info, $status_update ) {
 		$options = array();
@@ -251,35 +254,6 @@ class Affiliates_Mailchimp_Handler {
 	}
 
 	/**
-	 * Unsubscribe a user from the mail list
-	 *
-	 * @param int $user_id
-	 * @param array $user_info
-	 */
-	public static function delete_subscriber( $user_id, $user_info ) {
-		$options = array();
-		$options = get_option( 'affiliates-mailchimp' );
-
-		if ( $options['api_key'] ) {
-			$list_id = isset( $options['list_id'] ) ? $options['list_id'] : null;
-
-			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
-
-			if ( isset( $list_id ) ) {
-				if ( $user_info ) {
-					// Check if user belongs to list
-					$check = $api->member( $list_id, $user_info['email'] );
-					if ( isset( $check['status'] ) ) {
-						if ( $check['status'] == 'subscribed' ) {
-							$api->deleteMember( $list_id, $user_info['email'] );
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Add existing affiliates to mailchimp list
 	 */
 	public static function synchronize() {
@@ -294,33 +268,10 @@ class Affiliates_Mailchimp_Handler {
 						'last_name'  => $affiliate['name'],
 					);
 					error_log( 'Affiliates MailChimp is adding affiliate with ID ' . esc_attr( $affiliate['affiliate_id'] ) );
-					self::manage_subscriber( $affiliate['affiliate_id'], $user_data );
+					self::manage_subscriber( $affiliate['affiliate_id'], $user_data, true );
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get the id from an array of results.
-	 * Results can be lists, interest_categories, interests
-	 *
-	 * @param string $id_type one of lists, categories, interests
-	 * @param array $results_list
-	 * @param string $option_name name of id_type
-	 * @return NULL|string
-	 */
-	private static function get_id( $id_type = null, $results_list = array(), $option_name = '' ) {
-		$result = null;
-		if ( isset( $id_type ) ) {
-			if ( is_array( $results_list ) ) {
-				foreach ( $results_list[$id_type] as $list ) {
-					if ( in_array( $option_name, $list ) ) {
-						$result = $list['id'];
-					}
-				}
-			}
-		}
-		return $result;
 	}
 
 	/**
@@ -351,128 +302,17 @@ class Affiliates_Mailchimp_Handler {
 	 */
 	private static function get_affiliate_data( $aff_id ) {
 		$result = null;
-		if ( affiliates_get_affiliate( $aff_id ) ) {
-			$aff_data = affiliates_get_affiliate( $aff_id );
-			if ( isset( $aff_data ) ) {
-				$result = array(
-					'email'      => $aff_data['email'],
-					'first_name' => $aff_data['name'],
-					'last_name'  => $aff_data['name'],
-					'status'     => $aff_data['status']
-				);
-			}
+
+		$aff_data = affiliates_get_affiliate( $aff_id );
+		if ( isset( $aff_data ) ) {
+			$result = array(
+				'email'      => $aff_data['email'],
+				'first_name' => $aff_data['name'],
+				'last_name'  => $aff_data['name'],
+				'status'     => $aff_data['status']
+			);
 		}
 		return $result;
-	}
-
-	/**
-	 * Get id, wrapper for lists.
-	 *
-	 * @return NULL|string
-	 */
-	private static function get_list_id() {
-		$list_id = null;
-		$options = get_option( 'affiliates-mailchimp' );
-
-		if ( $options['api_key'] ) {
-			$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
-			// fetch an array of lists where key is the id and value is the name
-			$lists = $api->getLists( true );
-
-			if ( isset( $lists ) && is_array( $lists ) ) {
-				foreach ( $lists as $key => $list_name ) {
-					if ( $list_id == $options['list_id'] ) {
-						$list_id = $key;
-					}
-				}
-			}
-		}
-		return $list_id;
-	}
-
-	/**
-	 * Get id, wrapper for list category
-	 *
-	 * @param string $list_id
-	 * @return NULL|string
-	 */
-	private static function get_category_id( $list_id ) {
-		$interest_category_id = null;
-		if ( isset( $list_id ) ) {
-			$options = get_option( 'affiliates-mailchimp' );
-
-			if ( $options['api_key'] ) {
-				$api = new Affiliates_Mailchimp_Api( $options['api_key'] );
-				$interest_categories = $api->getInterestGroups( $list_id );
-				if ( is_array( $interest_categories ) ) {
-					if ( isset( $interest_categories['categories'] ) ) {
-						foreach ( $interest_categories['categories'] as $category ) {
-							if (
-								$category['id'] == $options['category_id'] &&
-								$category['title'] == $options['interests_category']
-							) {
-								$interest_category_id = $category['id'];
-							}
-						}
-					}
-				}
-			}
-		}
-		return $interest_category_id;
-	}
-
-	/**
-	 * Get id, wrapper for interest id
-	 *
-	 * @param string $list_id
-	 * @param string $category_id
-	 * @return string $interest_id
-	 */
-	private static function get_interest_id( $list_id = null, $category_id = null ) {
-		$interest_id = null;
-		$options = get_option( 'affiliates-mailchimp' );
-
-		if ( isset( $list_id ) && isset( $category_id ) ) {
-			if ( $options['api_key'] ) {
-				$interests = $api->getInterestGroupOptions( $list_id, $category_id );
-				if ( is_array( $interests ) ) {
-					if ( isset( $interests['interests'] ) ) {
-						foreach ( $interests['interests'] as $interest ) {
-							if (
-								$interest['id'] == $options['interest_id'] &&
-								$interest['name'] == $options['interest']
-							) {
-								$interest_id = $interest['id'];
-							}
-						}
-					}
-				}
-			}
-		}
-		return $interest_id;
-	}
-
-	/**
-	 * Stores List, Category and Interest IDs
-	 *
-	 * @param string $list_name the list name
-	 * @return NULL|array $options with ids
-	 */
-	public static function set_ids( $list_name ) {
-		$options = null;
-		if ( isset( $list_name ) ) {
-			$list_id = self::get_list_id();
-			$options['list_id'] = isset( $list_id ) ? $list_id : null;
-			if ( isset( $list_id ) ) {
-				$category_id = self::get_category_id( $list_id );
-				$options['category_id'] = isset( $category_id ) ? $category_id : null;
-				if ( isset( $category_id ) ) {
-					$interest_id = self::get_interest_id( $list_id, $category_id );
-					$options['interest_id'] = isset( $interest_id ) ? $interest_id : null;
-				}
-			}
-		}
-		return $options;
 	}
 
 } Affiliates_Mailchimp_Handler::init();
