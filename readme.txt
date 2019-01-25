@@ -3,7 +3,7 @@ Contributors: itthinx, proaktion, gtsiokos
 Donate link: http://www.itthinx.com/shop/
 Tags: affiliate, affiliates, referral, growth marketing, MailChimp
 Requires at least: 4.9
-Tested up to: 5.0
+Tested up to: 5.0.3
 Requires PHP: 5.6.0
 Stable tag: 3.1.0
 License: GPLv3
