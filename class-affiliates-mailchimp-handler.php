@@ -259,7 +259,9 @@ class Affiliates_Mailchimp_Handler {
 	public static function synchronize() {
 		$affiliates = affiliates_get_affiliates();
 		if ( count( $affiliates ) > 0 ) {
-			error_log( 'Affiliates MailChimp will try to add ' . count( $affiliates ) . ' affiliates.' );
+			if ( function_exists( 'affiliates_log_info' ) ) {
+				affiliates_log_info( 'Affiliates MailChimp will try to add ' . count( $affiliates ) . ' affiliates.' );
+			}
 			foreach ( $affiliates as $affiliate ) {
 				if ( $affiliate['affiliate_id'] != 1 ) {
 					$user_data = array(
@@ -267,7 +269,9 @@ class Affiliates_Mailchimp_Handler {
 						'first_name' => $affiliate['name'],
 						'last_name'  => $affiliate['name'],
 					);
-					error_log( 'Affiliates MailChimp is adding affiliate with ID ' . esc_attr( $affiliate['affiliate_id'] ) );
+					if ( function_exists( 'affiliates_log_info' ) ) {
+						affiliates_log_info( 'Affiliates MailChimp is adding affiliate with ID ' . esc_attr( $affiliate['affiliate_id'] ) );
+					}
 					self::manage_subscriber( $affiliate['affiliate_id'], $user_data, true );
 				}
 			}

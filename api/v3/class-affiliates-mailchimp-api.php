@@ -214,7 +214,9 @@ class Affiliates_Mailchimp_Api
 			unset($data['interests']);
 		}
 		
-		error_log('api.subscribe Subscribing' . $email . ' ' . $data);
+		if ( function_exists( 'affiliates_log_info' ) ) {
+			affiliates_log_info('api.subscribe Subscribing' . $email . ' ' . $data);
+		}
 		
 		return $this->post("lists/$list_id/members", $data);
 	}
@@ -259,7 +261,9 @@ class Affiliates_Mailchimp_Api
 			unset($data['interests']);
 		}
 		
-		error_log('api.update_member Updating ' . $email);
+		if ( function_exists( 'affiliates_log_info' ) ) {
+			affiliates_log_info('api.update_member Updating ' . $email);
+		}
 		
 		return $this->patch("lists/$list_id/members/$hash", $data);
 	}
@@ -309,7 +313,9 @@ class Affiliates_Mailchimp_Api
 			unset($data['interests']);
 		}
 		
-		error_log('api.update_or_create Update Or Create' . $email . ' ' . $data);
+		if ( function_exists( 'affiliates_log_info' ) ) {
+			affiliates_log_info('api.update_or_create Update Or Create' . $email . ' ' . $data);
+		}
 		
 		return $this->put("lists/$list_id/members/$hash", $data);
 	}
@@ -710,7 +716,9 @@ class Affiliates_Mailchimp_Api
 				return false;
 			}
 			
-			error_log('api.addCart Adding Cart ' . $email . ' ' . $data = $cart->toArray());
+			if ( function_exists( 'affiliates_log_info' ) ) {
+				affiliates_log_info('api.addCart Adding Cart ' . $email . ' ' . $data = $cart->toArray());
+			}
 			
 			$data = $this->post("ecommerce/stores/$store_id/carts", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
@@ -742,7 +750,9 @@ class Affiliates_Mailchimp_Api
 				return false;
 			}
 			
-			error_log('api.updateCart', "Updating Cart :: {$email}", $data = $cart->toArrayForUpdate());
+			if ( function_exists( 'affiliates_log_info' ) ) {
+				affiliates_log_info('api.updateCart, Updating Cart :: ' . $email . ' ' . $data = $cart->toArrayForUpdate());
+			}
 			
 			$data = $this->patch("ecommerce/stores/$store_id/carts/{$cart->getId()}", $data);
 			$cart = new MailChimp_WooCommerce_Cart();
